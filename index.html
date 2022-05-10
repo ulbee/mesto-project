@@ -9,11 +9,10 @@
 </head>
 <body class="page">
     <header class="header page__header">
-        <div class="logo"></div>
-
+        <div class="logo page__logo page__logo_mobile"></div>
     </header>    
     <main class="main">
-        <section class="page__section">
+        <section class="top page__section page__section_top">
             <div class="profile">
                 <div class="profile__avatar"></div>
                 <div class="profile__info">
@@ -24,12 +23,47 @@
             </div>
             <input type="button" class="add-button">
         </section>
-        <section class="cards">
+        <section class="cards page__section page__section_cards">
             <div class="card">
-                <img class="card__image">
-                <div class="card__">
-                    <h3 class="card__title"></h3>
+                <img class="card__image" src="./images/image1.jpg" alt="Карачаевск.">
+                <div class="card__info">
+                    <h3 class="card__title">Карачаевск</h3>
                     <div class="card__like"></div>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/image2.jpg" alt="Вид на Эльбрус.">
+                <div class="card__info">
+                    <h3 class="card__title">Гора Эльбрус</h3>
+                    <div class="card__like"></div>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/image3.jpg" alt="Домбай.">
+                <div class="card__info">
+                    <h3 class="card__title">Домбай</h3>
+                    <div class="card__like card__like_active"></div>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/image4.jpeg" alt="Байкал.">
+                <div class="card__info">
+                    <h3 class="card__title">Байкал</h3>
+                    <div class="card__like card__like_active"></div>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/image5.jpeg" alt="Тайланд.">
+                <div class="card__info">
+                    <h3 class="card__title">Тайланд, остров Самуи</h3>
+                    <div class="card__like card__like_active"></div>
+                </div>
+            </div>
+            <div class="card">
+                <img class="card__image" src="./images/image6.jpeg" alt="Гранд-Каньон.">
+                <div class="card__info">
+                    <h3 class="card__title">Гранд-Каньон</h3>
+                    <div class="card__like card__like_active"></div>
                 </div>
             </div>
         </section>

@@ -3,14 +3,32 @@
 
 @import url(../blocks/page/page.css);
 @import url(../blocks/page/__header/page__header.css);
+@import url(../blocks/page/__logo/page__logo.css);
+@import url(../blocks/page/__logo/_mobile/page__logo_mobile.css);
 @import url(../blocks/page/__footer/page__footer.css);
 @import url(../blocks/page/__section/page__section.css);
+@import url(../blocks/page/__section/_top/page__section_top.css);
+@import url(../blocks/page/__section/_cards/page__section_cards.css);
 
 @import url(../blocks/header/header.css);
 @import url(../blocks/logo/logo.css);
 
+@import url(../blocks/top/top.css);
 @import url(../blocks/profile/profile.css);
 @import url(../blocks/profile/__avatar/profile__avatar.css);
+@import url(../blocks/profile/__info/profile__info.css);
+@import url(../blocks/profile/__title/profile__title.css);
+@import url(../blocks/profile/__subtitle/profile__subtitle.css);
+@import url(../blocks/profile/__edit-button/profile__edit-button.css);
+@import url(../blocks/add-button/add-button.css);
+
+@import url(../blocks/cards/cards.css);
+@import url(../blocks/card/card.css);
+@import url(../blocks/card/__image/card__image.css);
+@import url(../blocks/card/__info/card__info.css);
+@import url(../blocks/card/__title/card__title.css);
+@import url(../blocks/card/__like/card__like.css);
+@import url(../blocks/card/__like/_active/card__like_active.css);
 
 @import url(../blocks/footer/footer.css);
 @import url(../blocks/footer/__copyright/footer__copyright.css);
