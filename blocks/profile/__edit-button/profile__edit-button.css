@@ -3,6 +3,8 @@
     width: 24px;
     height: 24px;
     border: none;
+
+    vertical-align: middle;
 }
 
 .profile__edit-button:hover {

@@ -1,11 +1,13 @@
 .profile {
     display: flex;
+    width: calc(100% - 150px);
 }
 
 @media screen and (max-width: 680px) {
     .profile {
         flex-direction: column;
         align-items: center;
+        width: 100%;
 
         padding-bottom: 36px;
     }

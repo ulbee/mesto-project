@@ -5,10 +5,17 @@
     font-size: 18px;
     font-weight: normal;
     line-height: 22px;
+
+    max-width: calc(100% - 30px - 24px - 18px - 120px - 30px);
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 @media screen and (max-width: 680px) {
     .profile__subtitle {
+        max-width: 100%;
+
         font-size: 14px;
         line-height: 17px;
         padding-top: 14px;
