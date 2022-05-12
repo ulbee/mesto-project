@@ -1,7 +1,5 @@
 .profile {
     display: flex;
-    /* Ширина колонки 100% родителя за исключением ширины кнопки для добавления фотографий */
-    width: calc(100% - 150px);
 }
 
 @media screen and (max-width: 680px) {

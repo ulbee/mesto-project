@@ -1,18 +1,12 @@
 .profile__subtitle {
     margin: 0;
-    padding-top: 16px;
+    padding-top: 8px;
 
     font-size: 18px;
     font-weight: normal;
     line-height: 22px;
 
-    /* Ширина обязательно нужна для правильного отображения длинного текста
-    30px - отступы от блока кнопки и аватарки пользователя
-    24px - ширина иконки редактирования
-    18px - отступ от кнопки редактирования
-    120px - ширина блока с аватаркой пользователя
-    */
-    max-width: calc(100% - 30px - 24px - 18px - 120px - 30px);
+    max-width: 336px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -20,7 +14,7 @@
 
 @media screen and (max-width: 680px) {
     .profile__subtitle {
-        max-width: 100%;
+        max-width: 282px;
 
         font-size: 14px;
         line-height: 17px;

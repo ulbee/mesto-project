@@ -1,14 +1,18 @@
 .profile__info {
-    align-self: center;
-    padding-left: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    width: 336px;
 
-    width: 100%;
+    align-self: center;
+    padding-left: 30px;        
 }
 
 @media screen and (max-width: 680px) {
     .profile__info {
-        text-align: center;        
         padding-left: 0;
         padding-top: 26px;
+
+        justify-content: center;
     }
 }
