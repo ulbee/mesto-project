@@ -6,13 +6,6 @@
     font-weight: 500;
     line-height: 48px;
 
-    /* Ширина обязательно нужна для правильного отображения длинного текста
-    30px - отступы от блока кнопки и аватарки пользователя
-    24px - ширина иконки редактирования
-    18px - отступ от кнопки редактирования
-    120px - ширина блока с аватаркой пользователя
-    */
-    /* max-width: calc(100% - 30px - 24px - 18px - 120px - 30px); */
     max-width: 294px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -20,8 +13,7 @@
 }
 
 @media screen and (max-width: 680px) {
-    .profile__title {
-        /* max-width: calc(100% - 24px - 18px); */
+    .profile__title {        
         max-width: 189px;
 
         font-size: 27px;
