@@ -9,6 +9,7 @@ let addPictureBtn = profile.querySelector('.profile__add-button');
 let cards = document.querySelector('.cards');
 let likeBtns = cards.querySelectorAll('.card__like'); 
 let deleteBtns = cards.querySelectorAll('.card__delete');
+let images = cards.querySelectorAll('.card__image');
 
 /* Определяем элементы попапа редактирования. 
  * Для того, чтобы различать попапы, решила использовать id вместо класса.
@@ -72,6 +73,11 @@ function addPicture(e) {
     closePicturePopup();
 }
 
+// Функция открытия картинки большего размера
+function openImage() {
+
+}
+
 
 
 
@@ -95,9 +101,10 @@ closeProfilePopupBtn.addEventListener('click', closeProfilePopup);
 // Добавление обработчика сохранения данных о пользователе
 profileForm.addEventListener('submit', saveProfileInfo);
 
-/* Лайк изображения. 
+/**
+ * Лайк изображения.
  * Добавляем обработчики в цикле, потому что карточек на странице много
- * TODO !!! Не работает лайк только что добавленно карточки!!!
+ * TODO !!! Не работает лайк только что добавленной карточки!!!
  */
 for (let i = 0; i < likeBtns.length; i++) {
     likeBtns[i].addEventListener('click', function() {
@@ -116,11 +123,20 @@ closePicturePopupBtn.addEventListener('click', closePicturePopup);
 // Вешаем обработчик добавления изображения
 pictureForm.addEventListener('submit', addPicture);
 
-/* Добавляем обработчики удаления изображения
+
+/**
+ * Добавляем обработчики удаления изображения
  * Снова в цикле, потому что много таких элементов
+ * TODO !!! Не работает удаление только что добавленной карточки!!!
  */
 for (let i = 0; i < deleteBtns.length; i++) {
     deleteBtns[i].addEventListener('click', function() {
         this.parentNode.remove();
     });
+}
+
+// Добавляем обработчики клика на изображения
+// TODO !!! Не работает клик только что добавленной карточки!!!
+for (let i = 0; i < images.length; i++) {
+    images[i].addEventListener('click', openImage);
 }
