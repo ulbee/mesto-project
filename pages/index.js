@@ -1,13 +1,14 @@
 // Определяем редактируемые элементы профиля пользователя
 let profile = document.querySelector('.profile');
-let editButton = profile.querySelector('.profile__edit-button');
+let editBtn = profile.querySelector('.profile__edit-button');
 let userName = profile.querySelector('.profile__title');
 let userInfo = profile.querySelector('.profile__subtitle');
 let addPictureBtn = profile.querySelector('.profile__add-button');
 
 // Определяем элементы взаимодействия с карточками изображений
 let cards = document.querySelector('.cards');
-let likeButtons = cards.querySelectorAll('.card__like'); 
+let likeBtns = cards.querySelectorAll('.card__like'); 
+let deleteBtns = cards.querySelectorAll('.card__delete');
 
 /* Определяем элементы попапа редактирования. 
  * Для того, чтобы различать попапы, решила использовать id вместо класса.
@@ -60,6 +61,7 @@ function addPicture(e) {
     let link = pictureLinkInput.value;
 
     cards.insertAdjacentHTML('afterbegin', `<div class="card">
+        <button type="button" class="card__delete"></button>
         <img class="card__image" src="${link}" alt="${title}">
             <div class="card__info">
                 <h2 class="card__title">${title}</h2>
@@ -80,7 +82,7 @@ function addPicture(e) {
 
 
 // Открытие попапа редактирования информации о пользователе
-editButton.addEventListener('click', function() {
+editBtn.addEventListener('click', function() {
     userNameInput.value = userName.innerText;
     userInfoInput.value = userInfo.innerText;
 
@@ -97,8 +99,8 @@ profileForm.addEventListener('submit', saveProfileInfo);
  * Добавляем обработчики в цикле, потому что карточек на странице много
  * TODO !!! Не работает лайк только что добавленно карточки!!!
  */
-for (let i = 0; i < likeButtons.length; i++) {
-    likeButtons[i].addEventListener('click', function() {
+for (let i = 0; i < likeBtns.length; i++) {
+    likeBtns[i].addEventListener('click', function() {
         this.classList.toggle('card__like_active');
     });
 }
@@ -111,4 +113,14 @@ addPictureBtn.addEventListener('click', function() {
 // Вешаем обработчик закрытия попапа добавления новой картинки
 closePicturePopupBtn.addEventListener('click', closePicturePopup);
 
+// Вешаем обработчик добавления изображения
 pictureForm.addEventListener('submit', addPicture);
+
+/* Добавляем обработчики удаления изображения
+ * Снова в цикле, потому что много таких элементов
+ */
+for (let i = 0; i < deleteBtns.length; i++) {
+    deleteBtns[i].addEventListener('click', function() {
+        this.parentNode.remove();
+    });
+}
