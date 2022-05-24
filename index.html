@@ -23,55 +23,7 @@
                 <button type="button" class="profile__add-button"></button>
             </div>
         </section>
-        <section class="cards page__section page__section_cards">
-            <div class="card">
-                <button type="button" class="card__delete"></button>
-                <img class="card__image" src="./images/image1.jpg" alt="Карачаевск.">
-                <div class="card__info">
-                    <h2 class="card__title">Карачаевск</h2>
-                    <button type="button" class="card__like"></button>
-                </div>
-            </div>
-            <div class="card">
-                <button type="button" class="card__delete"></button>
-                <img class="card__image" src="./images/image2.jpg" alt="Вид на Эльбрус.">
-                <div class="card__info">
-                    <h2 class="card__title">Гора Эльбрус</h2>
-                    <button type="button" class="card__like"></button>
-                </div>
-            </div>
-            <div class="card">
-                <button type="button" class="card__delete"></button>
-                <img class="card__image" src="./images/image3.jpg" alt="Домбай.">
-                <div class="card__info">
-                    <h2 class="card__title">Домбай</h2>
-                    <button type="button" class="card__like card__like_active"></button>
-                </div>
-            </div>
-            <div class="card">
-                <button type="button" class="card__delete"></button>
-                <img class="card__image" src="./images/image4.jpeg" alt="Байкал.">
-                <div class="card__info">
-                    <h2 class="card__title">Байкал</h2>
-                    <button type="button" class="card__like card__like_active"></button>
-                </div>
-            </div>
-            <div class="card">
-                <button type="button" class="card__delete"></button>
-                <img class="card__image" src="./images/image5.jpeg" alt="Тайланд.">
-                <div class="card__info">
-                    <h2 class="card__title">Тайланд, остров Самуи</h2>
-                    <button type="button" class="card__like card__like_active"></button>
-                </div>
-            </div>
-            <div class="card">
-                <button type="button" class="card__delete"></button>
-                <img class="card__image" src="./images/image6.jpeg" alt="Гранд-Каньон.">
-                <div class="card__info">
-                    <h2 class="card__title">Гранд-Каньон</h2>
-                    <button type="button" class="card__like card__like_active"></button>
-                </div>
-            </div>
+        <section class="cards page__section page__section_cards">            
         </section>        
     </main>
     <footer class="footer page__footer">
@@ -105,14 +57,23 @@
 
 
 
-    <div class="popup popup_opened popup_type_image">
+    <div class="popup popup_type_image">
         <div class="popup__container">
             <button type="button" class="popup__close"></button>
             <img src="./images/image3.jpg">
             <p class="popup__image-title">Байкал</p>
         </div>
     </div>
-
+    <template id="card">
+        <div class="card">
+            <button type="button" class="card__delete"></button>
+            <img class="card__image" src="" alt="">
+            <div class="card__info">
+                <h2 class="card__title"></h2>
+                <button type="button" class="card__like"></button>
+            </div>
+        </div>   
+    </template>
     <script src="./pages/index.js"></script>
 </body>
 </html>

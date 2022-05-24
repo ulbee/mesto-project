@@ -7,9 +7,10 @@ let addPictureBtn = profile.querySelector('.profile__add-button');
 
 // Определяем элементы взаимодействия с карточками изображений
 let cards = document.querySelector('.cards');
-let likeBtns = cards.querySelectorAll('.card__like'); 
-let deleteBtns = cards.querySelectorAll('.card__delete');
 let images = cards.querySelectorAll('.card__image');
+
+// Шаблон для добавления карточек
+const cardTemplate = document.querySelector('#card').content;
 
 /* Определяем элементы попапа редактирования. 
  * Для того, чтобы различать попапы, решила использовать id вместо класса.
@@ -28,12 +29,48 @@ let pictureForm = addPicturePopup.querySelector('.popup__form');
 let pictureTitleInput = pictureForm.querySelector('.popup__input[name="title"]');
 let pictureLinkInput = pictureForm.querySelector('.popup__input[name="link"]');
 
+// Массив добавленных по умолчанию карточек
+const initialCards = [{
+      name: 'Архыз',
+      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
+    }, {
+      name: 'Челябинская область',
+      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
+    }, {
+      name: 'Иваново',
+      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
+    }, {
+      name: 'Камчатка',
+      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
+    }, {
+      name: 'Холмогорский район',
+      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
+    }, {
+      name: 'Байкал',
+      link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
+    }];
+
+initialCards.forEach(el => {
+    let card = createCardBlock(el.name, el.link);
+
+    cards.append(card);    
+})
+
+
 // Функция закрытия попапа редактирования информации о пользователе
 function closeProfilePopup() {
     editProfilePopup.classList.remove('popup_opened');
 
     userNameInput.value = '';
     userInfoInput.value = '';
+}
+
+// Функция закрытия попапа добавления изображения
+function closePicturePopup() {
+    addPicturePopup.classList.remove('popup_opened');
+
+    pictureTitleInput.value = '';
+    pictureLinkInput.value = '';
 }
 
 // Функция "сохранения" информации о пользователе
@@ -46,35 +83,36 @@ function saveProfileInfo(e) {
     closeProfilePopup();
 }
 
-// Функция закрытия попапа добавления изображения
-function closePicturePopup() {
-    addPicturePopup.classList.remove('popup_opened');
+// Функция создания html-разметки блока карточки
+function createCardBlock(title, link) {
+    const cardItem = cardTemplate.cloneNode(true);
+    
+    cardItem.querySelector('.card__image').src = link;
+    cardItem.querySelector('.card__image').alt = title;
+    cardItem.querySelector('.card__title').textContent = title;
 
-    pictureTitleInput.value = '';
-    pictureLinkInput.value = '';
+    cardItem.querySelector('.card__delete').addEventListener('click', function(e) {
+        e.target.closest('.card').remove();
+    });
+    cardItem.querySelector('.card__like').addEventListener('click', function(e) {
+        e.target.classList.toggle('card__like_active');
+    });
+
+    return cardItem;
 }
 
 // Функция добавления нового изображения
 function addPicture(e) {
     e.preventDefault();
 
-    let title = pictureTitleInput.value;
-    let link = pictureLinkInput.value;
-
-    cards.insertAdjacentHTML('afterbegin', `<div class="card">
-        <button type="button" class="card__delete"></button>
-        <img class="card__image" src="${link}" alt="${title}">
-            <div class="card__info">
-                <h2 class="card__title">${title}</h2>
-                <button type="button" class="card__like"></button>
-            </div>
-    </div>`);
+    let card = createCardBlock(pictureTitleInput.value, pictureLinkInput.value)
+    cards.prepend(card);
 
     closePicturePopup();
 }
 
 // Функция открытия картинки большего размера
-function openImage() {
+function openPicture() {
 
 }
 
@@ -101,17 +139,6 @@ closeProfilePopupBtn.addEventListener('click', closeProfilePopup);
 // Добавление обработчика сохранения данных о пользователе
 profileForm.addEventListener('submit', saveProfileInfo);
 
-/**
- * Лайк изображения.
- * Добавляем обработчики в цикле, потому что карточек на странице много
- * TODO !!! Не работает лайк только что добавленной карточки!!!
- */
-for (let i = 0; i < likeBtns.length; i++) {
-    likeBtns[i].addEventListener('click', function() {
-        this.classList.toggle('card__like_active');
-    });
-}
-
 // Обработчик добавления нового изображения
 addPictureBtn.addEventListener('click', function() {
     addPicturePopup.classList.add('popup_opened');
@@ -122,21 +149,3 @@ closePicturePopupBtn.addEventListener('click', closePicturePopup);
 
 // Вешаем обработчик добавления изображения
 pictureForm.addEventListener('submit', addPicture);
-
-
-/**
- * Добавляем обработчики удаления изображения
- * Снова в цикле, потому что много таких элементов
- * TODO !!! Не работает удаление только что добавленной карточки!!!
- */
-for (let i = 0; i < deleteBtns.length; i++) {
-    deleteBtns[i].addEventListener('click', function() {
-        this.parentNode.remove();
-    });
-}
-
-// Добавляем обработчики клика на изображения
-// TODO !!! Не работает клик только что добавленной карточки!!!
-for (let i = 0; i < images.length; i++) {
-    images[i].addEventListener('click', openImage);
-}
