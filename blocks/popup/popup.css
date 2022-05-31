@@ -9,7 +9,11 @@
     min-width: 320px;
     height: 100%;     
     
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity .6s, visibility 0s .6s;
 }
