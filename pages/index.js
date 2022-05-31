@@ -5,9 +5,8 @@ let userName = profile.querySelector('.profile__title');
 let userInfo = profile.querySelector('.profile__subtitle');
 let addPictureBtn = profile.querySelector('.profile__add-button');
 
-// Определяем элементы взаимодействия с карточками изображений
+// Контейнер для карточек с изображениями
 let cards = document.querySelector('.cards');
-let images = cards.querySelectorAll('.card__image');
 
 // Шаблон для добавления карточек
 const cardTemplate = document.querySelector('#card').content;
@@ -17,17 +16,21 @@ const cardTemplate = document.querySelector('#card').content;
  * Это добавляет специфичности.
  */
 let editProfilePopup = document.querySelector('#editUserInfo');
-let closeProfilePopupBtn = editProfilePopup.querySelector('.popup__close');
 let profileForm = editProfilePopup.querySelector('.popup__form');
 let userNameInput = profileForm.querySelector('.popup__input[name="name"]');
 let userInfoInput = profileForm.querySelector('.popup__input[name="additional-info"]');
 
 // Определяем элементы попапа добавления нового изображения
 let addPicturePopup = document.querySelector('#addPicture');
-let closePicturePopupBtn = addPicturePopup.querySelector('.popup__close');
 let pictureForm = addPicturePopup.querySelector('.popup__form');
 let pictureTitleInput = pictureForm.querySelector('.popup__input[name="title"]');
 let pictureLinkInput = pictureForm.querySelector('.popup__input[name="link"]');
+
+// Попап показа изображения
+let showPicturePopup = document.querySelector('#showPicture');
+
+// Кнопки закрытия попапов
+let closePopupBtns = document.querySelectorAll('.popup__close');
 
 // Массив добавленных по умолчанию карточек
 const initialCards = [{
@@ -50,37 +53,31 @@ const initialCards = [{
       link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
     }];
 
-initialCards.forEach(el => {
-    let card = createCardBlock(el.name, el.link);
+initialCards.forEach(item => {
+    let card = createCardBlock(item.name, item.link);
 
     cards.append(card);    
-})
+});
 
+// Функция закрытия попапа
+function closePopup(e) {
+    let popup = e.target.closest('.popup');
+    popup.classList.remove('popup_opened');
 
-// Функция закрытия попапа редактирования информации о пользователе
-function closeProfilePopup() {
-    editProfilePopup.classList.remove('popup_opened');
-
-    userNameInput.value = '';
-    userInfoInput.value = '';
-}
-
-// Функция закрытия попапа добавления изображения
-function closePicturePopup() {
-    addPicturePopup.classList.remove('popup_opened');
-
-    pictureTitleInput.value = '';
-    pictureLinkInput.value = '';
+    popup.querySelectorAll('.popup__input').forEach(item => {
+        item.value = '';
+    })
 }
 
 // Функция "сохранения" информации о пользователе
 function saveProfileInfo(e) {
     e.preventDefault();
 
+    // TODO проверить на XSS!!!
     userName.innerText = userNameInput.value;
     userInfo.innerText = userInfoInput.value;
 
-    closeProfilePopup();
+    closePopup(e);
 }
 
 // Функция создания html-разметки блока карточки
@@ -97,6 +94,9 @@ function createCardBlock(title, link) {
     cardItem.querySelector('.card__like').addEventListener('click', function(e) {
         e.target.classList.toggle('card__like_active');
     });
+    cardItem.querySelector('.card__image').addEventListener('click', function(e) {
+        openPicture(e);
+    });
 
     return cardItem;
 }
@@ -107,23 +107,24 @@ function addPicture(e) {
 
     let card = createCardBlock(pictureTitleInput.value, pictureLinkInput.value)
     cards.prepend(card);
-
-    closePicturePopup();
+    
+    closePopup(e);
 }
 
 // Функция открытия картинки большего размера
-function openPicture() {
+function openPicture(el) {
+    let src = el.target.src;
+    let title = el.target.alt;
 
+    showPicturePopup.querySelector('.popup__image').src = src;
+    showPicturePopup.querySelector('.popup__image-title').textContent = title;
+    showPicturePopup.classList.add('popup_opened');
 }
 
-
-
-
-
-
-
-
-
+// Обработчики на закрытие попапов
+closePopupBtns.forEach(function(item) {
+    item.addEventListener('click', closePopup);
+});
 
 // Открытие попапа редактирования информации о пользователе
 editBtn.addEventListener('click', function() {
@@ -133,9 +134,6 @@ editBtn.addEventListener('click', function() {
     editProfilePopup.classList.add('popup_opened');    
 });
 
-// Добавление обработчика закрытия попапа редактирования информации о пользователе без сохранения
-closeProfilePopupBtn.addEventListener('click', closeProfilePopup);
-
 // Добавление обработчика сохранения данных о пользователе
 profileForm.addEventListener('submit', saveProfileInfo);
 
@@ -143,9 +141,6 @@ profileForm.addEventListener('submit', saveProfileInfo);
 addPictureBtn.addEventListener('click', function() {
     addPicturePopup.classList.add('popup_opened');
 });
-
-// Вешаем обработчик закрытия попапа добавления новой картинки
-closePicturePopupBtn.addEventListener('click', closePicturePopup);
 
 // Вешаем обработчик добавления изображения
 pictureForm.addEventListener('submit', addPicture);
