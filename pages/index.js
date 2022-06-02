@@ -56,14 +56,14 @@ const initialCards = [{
     }];
 
 initialCards.forEach(item => {
-    let card = createCardBlock(item.name, item.link);
+    const card = createCardBlock(item.name, item.link);
 
     cards.append(card);    
 });
 
 // Функция закрытия попапа
 function closePopup(e) {
-    let popup = e.target.closest('.popup');
+    const popup = e.target.closest('.popup');
     popup.classList.remove('popup_opened');    
 }
 
@@ -107,7 +107,7 @@ function createCardBlock(title, link) {
 function addPicture(e) {
     e.preventDefault();
 
-    let card = createCardBlock(pictureTitleInput.value, pictureLinkInput.value)
+    const card = createCardBlock(pictureTitleInput.value, pictureLinkInput.value)
     cards.prepend(card);
     
     closePopup(e);
@@ -116,8 +116,8 @@ function addPicture(e) {
 
 // Функция открытия картинки большего размера
 function openPicture(el) {
-    let src = el.target.src;
-    let title = el.target.alt;
+    const src = el.target.src;
+    const title = el.target.alt;
 
     popupImage.src = src;
     popupImage.alt = title;
