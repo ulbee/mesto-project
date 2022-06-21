@@ -70,17 +70,17 @@ initialCards.forEach(item => {
 });
 
 // Функция закрытия попапа
-function closePopup(popup) {    
+const closePopup = (popup) => {    
     popup.classList.remove('popup_opened');    
 }
 
 // Функция открытия попапа
-function openPopup(popup) {
+const openPopup = (popup) => {
     popup.classList.add('popup_opened');
 }
 
 // Функция "сохранения" информации о пользователе
-function saveProfileInfo(e) {
+const saveProfileInfo = (e) => {
     e.preventDefault();
     const popup = e.target.closest('.popup');
 
@@ -91,7 +91,7 @@ function saveProfileInfo(e) {
 }
 
 // Функция создания html-разметки блока карточки
-function createCardBlock(title, link) {
+const createCardBlock = (title, link) => {
     const cardItem = cardTemplate.cloneNode(true);
     
     cardItem.querySelector('.card__image').src = link;
@@ -112,7 +112,7 @@ function createCardBlock(title, link) {
 }
 
 // Функция сохранения аватара пользователя
-function saveUserAvatar(e) {
+const saveUserAvatar = (e) => {
     e.preventDefault();
 
     const popup = e.target.closest('.popup');
@@ -123,7 +123,7 @@ function saveUserAvatar(e) {
 }
 
 // Функция добавления нового изображения
-function addPicture(e) {
+const addPicture = (e) => {
     e.preventDefault();
 
     const popup = e.target.closest('.popup');
@@ -135,7 +135,7 @@ function addPicture(e) {
 }
 
 // Функция открытия картинки большего размера
-function openPicture(el) {
+const openPicture = (el) => {
     const src = el.target.src;
     const title = el.target.alt;
 
