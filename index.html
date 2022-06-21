@@ -36,8 +36,8 @@
             <button type="button" class="popup__close"></button>
             <h2 class="popup__title">Обновить аватар</h2>
             <form name="user-avatar" class="popup__form" novalidate>
-                <input id="avatar-url" class="popup__input" type="text" name="url" placeholder="URL аватара пользователя" value="" required>
-                <span class="popup__input-error avatar-url__error"></span>
+                <input id="avatar-input" class="popup__input" type="text" name="url" placeholder="URL аватара пользователя" value="" required>
+                <span class="popup__input-error avatar-input__error"></span>
                 <button class="popup__save-button" type="submit">Сохранить</button>
             </form>
         </div>
@@ -60,8 +60,10 @@
             <button type="button" class="popup__close"></button>
             <h2 class="popup__title">Новое место</h2>
             <form name="add-picture" class="popup__form" novalidate>
-                <input class="popup__input" type="text" name="title" placeholder="Название" value="" required>
-                <input class="popup__input" type="text" name="link" placeholder="Ссылка на картинку" value="" required>
+                <input id="title-input" class="popup__input" type="text" name="title" placeholder="Название" value="" required minlength="2" maxlength="30">
+                <span class="popup__input-error title-input__error"></span>
+                <input id="link-input" class="popup__input" type="url" name="link" placeholder="Ссылка на картинку" value="" required>
+                <span class="popup__input-error link-input__error"></span>
                 <button class="popup__save-button" type="submit">Создать</button>
             </form>
         </div>

@@ -146,13 +146,9 @@ function openPicture(el) {
     openPopup(showPicturePopup);
 }
 
-
-
-
-
-
-
-
+/**
+ * Показ инлайного сообщения об ошибке для поля ввода
+ */
 const showErrorMessage = (form, input) => {
     const errorElement = form.querySelector(`.${input.id}__error`);
 
@@ -161,6 +157,9 @@ const showErrorMessage = (form, input) => {
     errorElement.classList.add('popup__input-error_active');
 };
 
+/**
+ * Функция скрытия сообщения об ошибке для инпута
+ */
 const hideErrorMessage = (form, input) => {
     const errorElement = form.querySelector(`.${input.id}__error`);
 
@@ -169,12 +168,18 @@ const hideErrorMessage = (form, input) => {
     errorElement.textContent = '';
 }
 
+/**
+ * Проверка валидности всех инпутов формы
+ */
 const hasInvalidValues = (form) => {
     const inputList = Array.from(form.querySelectorAll('.popup__input'));
 
     return inputList.some((input) => !input.validity.valid);    
 };
 
+/**
+ * Функция отображения актуального состояния кнопки для сохранения формы
+ */
 const showSaveButtonState = (form) => {
     const saveBtn = form.querySelector('.popup__save-button');
 
@@ -187,28 +192,34 @@ const showSaveButtonState = (form) => {
     }
 }
 
-const formElements = Array.from(document.querySelectorAll('.popup__form'));
+/**
+ * Добавление валидации для всех форм в попапах
+ */
+const enableFromValidation = () => {
+    const formElements = Array.from(document.querySelectorAll('.popup__form'));
 
-formElements.forEach((formElement) => {
-    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+    formElements.forEach((formElement) => {
+        const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
 
-    inputList.forEach((inputElement) => {
-        inputElement.addEventListener('input', () => {
-            if (hasInvalidValues(formElement)) {
-                showErrorMessage(formElement, inputElement);
+        showSaveButtonState(formElement);
+
+        inputList.forEach((inputElement) => {
+            inputElement.addEventListener('input', () => {
+                if (!inputElement.validity.valid) {
+                    showErrorMessage(formElement, inputElement);
+                } else {
+                    hideErrorMessage(formElement, inputElement);
+                }
+
                 showSaveButtonState(formElement);
-            } else {
-                hideErrorMessage(formElement, inputElement);
-                showSaveButtonState(formElement);
-            }
+            });
         });
     });
-});
+
+}
 
 
-
-
-
+enableFromValidation();
 
 
 // Обработчики на закрытие попапов
