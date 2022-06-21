@@ -1,5 +1,6 @@
 // Определяем редактируемые элементы профиля пользователя
 const profile = document.querySelector('.profile');
+const userAvatar = profile.querySelector('.profile__avatar');
 const editBtn = profile.querySelector('.profile__edit-button');
 const userName = profile.querySelector('.profile__title');
 const userInfo = profile.querySelector('.profile__subtitle');
@@ -10,6 +11,11 @@ const cards = document.querySelector('.cards');
 
 // Шаблон для добавления карточек
 const cardTemplate = document.querySelector('#card').content;
+
+// Попап обновления аватара пользователя
+const editUserAvatarPopup = document.querySelector('#editUserAvatar');
+const editUserAvatarForm = editUserAvatarPopup.querySelector('.popup__form');
+const userAvatarInput = editUserAvatarForm.querySelector('.popup__input[name="url"]');
 
 /* Определяем элементы попапа редактирования. 
  * Для того, чтобы различать попапы, решила использовать id вместо класса.
@@ -31,6 +37,8 @@ const showPicturePopup = document.querySelector('#showPicture');
 const popupImage = showPicturePopup.querySelector('.popup__image');
 const popupImageTitle = showPicturePopup.querySelector('.popup__image-title');
 
+// 
+const popups = document.querySelectorAll('.popup');
 // Кнопки закрытия попапов
 const closePopupBtns = document.querySelectorAll('.popup__close');
 
@@ -62,8 +70,7 @@ initialCards.forEach(item => {
 });
 
 // Функция закрытия попапа
-function closePopup(e) {
-    const popup = e.target.closest('.popup');
+function closePopup(popup) {    
     popup.classList.remove('popup_opened');    
 }
 
@@ -75,11 +82,12 @@ function openPopup(popup) {
 // Функция "сохранения" информации о пользователе
 function saveProfileInfo(e) {
     e.preventDefault();
+    const popup = e.target.closest('.popup');
 
     userName.innerText = userNameInput.value;
     userInfo.innerText = userInfoInput.value;
 
-    closePopup(e);
+    closePopup(popup);
 }
 
 // Функция создания html-разметки блока карточки
@@ -103,14 +111,26 @@ function createCardBlock(title, link) {
     return cardItem;
 }
 
+// Функция сохранения аватара пользователя
+function saveUserAvatar(e) {
+    e.preventDefault();
+
+    const popup = e.target.closest('.popup');
+
+    userAvatar.src = userAvatarInput.value;
+    closePopup(popup);
+    editUserAvatarForm.reset();
+}
+
 // Функция добавления нового изображения
 function addPicture(e) {
     e.preventDefault();
 
+    const popup = e.target.closest('.popup');
     const card = createCardBlock(pictureTitleInput.value, pictureLinkInput.value)
     cards.prepend(card);
     
-    closePopup(e);
+    closePopup(popup);
     e.target.reset();
 }
 
@@ -126,10 +146,100 @@ function openPicture(el) {
     openPopup(showPicturePopup);
 }
 
+
+
+
+
+
+
+
+const showErrorMessage = (form, input) => {
+    const errorElement = form.querySelector(`.${input.id}__error`);
+
+    input.classList.add('popup__input_type_error');
+    errorElement.textContent = input.validationMessage;
+    errorElement.classList.add('popup__input-error_active');
+};
+
+const hideErrorMessage = (form, input) => {
+    const errorElement = form.querySelector(`.${input.id}__error`);
+
+    input.classList.remove('popup__input_type_error');
+    errorElement.classList.remove('popup__input-error_active');
+    errorElement.textContent = '';
+}
+
+const hasInvalidValues = (form) => {
+    const inputList = Array.from(form.querySelectorAll('.popup__input'));
+
+    return inputList.some((input) => !input.validity.valid);    
+};
+
+const showSaveButtonState = (form) => {
+    const saveBtn = form.querySelector('.popup__save-button');
+
+    if (hasInvalidValues(form)) {
+        saveBtn.classList.add('popup__save-button_disabled');        
+        saveBtn.setAttribute('disabled', true);
+    } else {
+        saveBtn.classList.remove('popup__save-button_disabled');
+        saveBtn.removeAttribute('disabled');
+    }
+}
+
+const formElements = Array.from(document.querySelectorAll('.popup__form'));
+
+formElements.forEach((formElement) => {
+    const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
+
+    inputList.forEach((inputElement) => {
+        inputElement.addEventListener('input', () => {
+            if (hasInvalidValues(formElement)) {
+                showErrorMessage(formElement, inputElement);
+                showSaveButtonState(formElement);
+            } else {
+                hideErrorMessage(formElement, inputElement);
+                showSaveButtonState(formElement);
+            }
+        });
+    });
+});
+
+
+
+
+
+
+
 // Обработчики на закрытие попапов
 closePopupBtns.forEach(function(item) {
-    item.addEventListener('click', closePopup);
+    
+    item.addEventListener('click', function(e) {
+        const popup = e.target.closest('.popup');
+        closePopup(popup);
+    });
 });
+
+// Закрытие попапа по кнопке Escape
+document.addEventListener('keydown', (e) => {        
+    const openedPopup = document.querySelector('.popup_opened');
+
+    if (e.key === 'Escape' && openedPopup) {
+        closePopup(openedPopup);
+    }
+});
+
+// Закрытие попапа по клику на оверлей
+document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('popup')) {
+        closePopup(e.target);
+    }
+});
+
+// Открытие попапа обновления аватара пользователя
+userAvatar.addEventListener('click', (e) => {
+    openPopup(editUserAvatarPopup);
+})
 
 // Открытие попапа редактирования информации о пользователе
 editBtn.addEventListener('click', function() {
@@ -138,6 +248,9 @@ editBtn.addEventListener('click', function() {
 
     openPopup(editProfilePopup);
 });
+
+// Обработчик обновления аватара
+editUserAvatarForm.addEventListener('submit', saveUserAvatar);
 
 // Добавление обработчика сохранения данных о пользователе
 profileForm.addEventListener('submit', saveProfileInfo);
@@ -149,3 +262,6 @@ addPictureBtn.addEventListener('click', function() {
 
 // Вешаем обработчик добавления изображения
 pictureForm.addEventListener('submit', addPicture);
+
+
+
