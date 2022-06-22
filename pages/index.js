@@ -1,3 +1,5 @@
+import { enableFromValidation } from "../src/components/validate.js";
+
 // Определяем редактируемые элементы профиля пользователя
 const profile = document.querySelector('.profile');
 const userAvatar = profile.querySelector('.profile__avatar');
@@ -63,11 +65,26 @@ const initialCards = [{
       link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
     }];
 
-initialCards.forEach(item => {
-    const card = createCardBlock(item.name, item.link);
+    // Функция создания html-разметки блока карточки
+const createCardBlock = (title, link) => {
+    const cardItem = cardTemplate.cloneNode(true);
+    
+    cardItem.querySelector('.card__image').src = link;
+    cardItem.querySelector('.card__image').alt = title;
+    cardItem.querySelector('.card__title').textContent = title;
 
-    cards.append(card);    
-});
+    cardItem.querySelector('.card__delete').addEventListener('click', function(e) {
+        e.target.closest('.card').remove();
+    });
+    cardItem.querySelector('.card__like').addEventListener('click', function(e) {
+        e.target.classList.toggle('card__like_active');
+    });
+    cardItem.querySelector('.card__image').addEventListener('click', function(e) {
+        openPicture(e);
+    });
+
+    return cardItem;
+};
 
 // Функция закрытия попапа
 const closePopup = (popup) => {    
@@ -88,27 +105,6 @@ const saveProfileInfo = (e) => {
     userInfo.innerText = userInfoInput.value;
 
     closePopup(popup);
-}
-
-// Функция создания html-разметки блока карточки
-const createCardBlock = (title, link) => {
-    const cardItem = cardTemplate.cloneNode(true);
-    
-    cardItem.querySelector('.card__image').src = link;
-    cardItem.querySelector('.card__image').alt = title;
-    cardItem.querySelector('.card__title').textContent = title;
-
-    cardItem.querySelector('.card__delete').addEventListener('click', function(e) {
-        e.target.closest('.card').remove();
-    });
-    cardItem.querySelector('.card__like').addEventListener('click', function(e) {
-        e.target.classList.toggle('card__like_active');
-    });
-    cardItem.querySelector('.card__image').addEventListener('click', function(e) {
-        openPicture(e);
-    });
-
-    return cardItem;
 }
 
 // Функция сохранения аватара пользователя
@@ -146,81 +142,20 @@ const openPicture = (el) => {
     openPopup(showPicturePopup);
 }
 
-/**
- * Показ инлайного сообщения об ошибке для поля ввода
- */
-const showErrorMessage = (form, input) => {
-    const errorElement = form.querySelector(`.${input.id}__error`);
+initialCards.forEach(item => {
+    const card = createCardBlock(item.name, item.link);
 
-    input.classList.add('popup__input_type_error');
-    errorElement.textContent = input.validationMessage;
-    errorElement.classList.add('popup__input-error_active');
-};
+    cards.append(card);    
+});
 
-/**
- * Функция скрытия сообщения об ошибке для инпута
- */
-const hideErrorMessage = (form, input) => {
-    const errorElement = form.querySelector(`.${input.id}__error`);
-
-    input.classList.remove('popup__input_type_error');
-    errorElement.classList.remove('popup__input-error_active');
-    errorElement.textContent = '';
-}
-
-/**
- * Проверка валидности всех инпутов формы
- */
-const hasInvalidValues = (form) => {
-    const inputList = Array.from(form.querySelectorAll('.popup__input'));
-
-    return inputList.some((input) => !input.validity.valid);    
-};
-
-/**
- * Функция отображения актуального состояния кнопки для сохранения формы
- */
-const showSaveButtonState = (form) => {
-    const saveBtn = form.querySelector('.popup__save-button');
-
-    if (hasInvalidValues(form)) {
-        saveBtn.classList.add('popup__save-button_disabled');        
-        saveBtn.setAttribute('disabled', true);
-    } else {
-        saveBtn.classList.remove('popup__save-button_disabled');
-        saveBtn.removeAttribute('disabled');
-    }
-}
-
-/**
- * Добавление валидации для всех форм в попапах
- */
-const enableFromValidation = () => {
-    const formElements = Array.from(document.querySelectorAll('.popup__form'));
-
-    formElements.forEach((formElement) => {
-        const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
-
-        showSaveButtonState(formElement);
-
-        inputList.forEach((inputElement) => {
-            inputElement.addEventListener('input', () => {
-                if (!inputElement.validity.valid) {
-                    showErrorMessage(formElement, inputElement);
-                } else {
-                    hideErrorMessage(formElement, inputElement);
-                }
-
-                showSaveButtonState(formElement);
-            });
-        });
-    });
-
-}
-
-
-enableFromValidation();
-
+enableFromValidation({
+    formSelector: '.popup__form',
+    inputSelector: '.popup__input',
+    submitButtonSelector: '.popup__save-button',
+    inactiveButtonClass: 'popup__save-button_disabled',
+    inputErrorClass: 'popup__input_type_error',
+    errorClass: 'popup__input-error_active'
+});
 
 // Обработчики на закрытие попапов
 closePopupBtns.forEach(function(item) {
