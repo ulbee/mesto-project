@@ -1,6 +1,8 @@
-import {enableFromValidation, showSaveButtonState} from "../src/components/validate.js";
-import * as Card from "../src/components/card.js";
-import * as Popup from "../src/components/modal.js";
+import './styles/index.css';
+
+import {enableFromValidation, showSaveButtonState} from "./components/validate.js";
+import * as Card from "./components/card.js";
+import * as Popup from "./components/modal.js";
 
 
 // Контейнер для карточек с изображениями

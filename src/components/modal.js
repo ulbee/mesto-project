@@ -21,14 +21,39 @@ const closePopupBtns = document.querySelectorAll(selectors.closeBtnSelector);
  * Функция закрытия попапа
  */
 const closePopup = (popup) => {    
-    popup.classList.remove(selectors.openedPopupClass);    
-}
+    popup.classList.remove(selectors.openedPopupClass);
+    unbindEscEvent();
+};
 
 /**
  * Функция открытия попапа
  */
 const openPopup = (popup) => {
     popup.classList.add(selectors.openedPopupClass);
+    bindEscEvent();
+};
+
+/**
+ * Обработчик нажатия на escape
+ */
+const onEscPress = (e) => {
+    if (e.key === 'Escape') {
+        closePopup(document.querySelector(`.${selectors.openedPopupClass}`));
+    }
+};
+
+/**
+ * Вешаем обработчик нажатия на Escape
+ */
+const bindEscEvent = () => {
+    document.addEventListener('keydown', onEscPress);
+}
+
+/**
+ * Снимаем обработчик нажатия на Escape
+ */
+const unbindEscEvent = () => {
+    document.removeEventListener('keydown', onEscPress);
 }
 
 /**
@@ -42,17 +67,6 @@ closePopupBtns.forEach(function(item) {
         const popup = e.target.closest(`.${selectors.popupClass}`);
         closePopup(popup);
     });
-});
-
-/**
- * Закрытие попапа по кнопке Escape
- */ 
-document.addEventListener('keydown', (e) => {        
-    const openedPopup = document.querySelector(`.${selectors.openedPopupClass}`);
-
-    if (e.key === 'Escape' && openedPopup) {
-        closePopup(openedPopup);
-    }
 });
 
 /**
