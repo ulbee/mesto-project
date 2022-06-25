@@ -50,22 +50,19 @@ const pictureLinkInput = pictureForm.querySelector(`${popupFormSelectors.inputSe
 // Функция "сохранения" информации о пользователе
 const saveProfileInfo = (e) => {
     e.preventDefault();
-    const popup = e.target.closest(`.${Popup.popupClass}`);
 
     userName.innerText = userNameInput.value;
     userInfo.innerText = userInfoInput.value;
 
-    Popup.closePopup(popup);
+    Popup.closePopup(editProfilePopup);
 }
 
 // Функция сохранения аватара пользователя
 const saveUserAvatar = (e) => {
     e.preventDefault();
 
-    const popup = e.target.closest('.popup');
-
     userAvatar.src = userAvatarInput.value;
-    Popup.closePopup(popup);
+    Popup.closePopup(editUserAvatarPopup);
     editUserAvatarForm.reset();
 }
 
@@ -73,10 +70,10 @@ const saveUserAvatar = (e) => {
 const addPicture = (e) => {
     e.preventDefault();
 
-    const popup = e.target.closest(`.${Popup.popupClass}`);
+    // const popup = e.target.closest(`.${Popup.popupClass}`);
     Card.addCard(cards, {title: pictureTitleInput.value, link: pictureLinkInput.value});
     
-    Popup.closePopup(popup);
+    Popup.closePopup(addPicturePopup);
     e.target.reset();
     showSaveButtonState(e.target, popupFormSelectors);
 }
@@ -93,7 +90,7 @@ editProfileBtn.addEventListener('click', function() {
 profileForm.addEventListener('submit', saveProfileInfo);
 
 // Обработчик добавления нового изображения
-addPictureBtn.addEventListener('click', function() {
+addPictureBtn.addEventListener('click', () => {
     Popup.openPopup(addPicturePopup);
 });
 

@@ -3,7 +3,8 @@
  */
 const selectors = {
     popupClass: 'popup',
-    closeBtnSelector: '.popup__close',
+
+    closeBtnClass: 'popup__close',
     openedPopupClass: 'popup_opened'
 }
 
@@ -11,18 +12,15 @@ const selectors = {
  * Выношу переменную для экспорта, чтобы не добавлять целый объект
  */
 const popupClass = selectors.popupClass;
-/**
- * Нужные элементы попапов на странице
- */
+
 const popups = document.querySelectorAll(`.${selectors.popupClass}`);
-const closePopupBtns = document.querySelectorAll(selectors.closeBtnSelector);
 
 /**
  * Функция закрытия попапа
  */
 const closePopup = (popup) => {    
     popup.classList.remove(selectors.openedPopupClass);
-    unbindEscEvent();
+    unbindEscPress();
 };
 
 /**
@@ -30,13 +28,13 @@ const closePopup = (popup) => {
  */
 const openPopup = (popup) => {
     popup.classList.add(selectors.openedPopupClass);
-    bindEscEvent();
+    bindEscPress();
 };
 
 /**
  * Обработчик нажатия на escape
  */
-const onEscPress = (e) => {
+const handleEscPress = (e) => {
     if (e.key === 'Escape') {
         closePopup(document.querySelector(`.${selectors.openedPopupClass}`));
     }
@@ -45,37 +43,31 @@ const onEscPress = (e) => {
 /**
  * Вешаем обработчик нажатия на Escape
  */
-const bindEscEvent = () => {
-    document.addEventListener('keydown', onEscPress);
+const bindEscPress = () => {
+    document.addEventListener('keydown', handleEscPress);
 }
 
 /**
  * Снимаем обработчик нажатия на Escape
  */
-const unbindEscEvent = () => {
-    document.removeEventListener('keydown', onEscPress);
+const unbindEscPress = () => {
+    document.removeEventListener('keydown', handleEscPress);
 }
 
 /**
- * Вешаем обработчики по клику на крестие для всех попапов на странице
- * 
- * Решила, что все-таки это относится к модулю попапов: они сами должны знать, как закрываться
+ * Вешаем обработчики по клику на крестие и на оверлее для всех попапов на странице
  */
-closePopupBtns.forEach(function(item) {
-    
-    item.addEventListener('click', function(e) {
-        const popup = e.target.closest(`.${selectors.popupClass}`);
-        closePopup(popup);
-    });
-});
+popups.forEach((popup) => {
+    popup.addEventListener('mousedown', (e) => {
+        
+        if (e.target.classList.contains(selectors.openedPopupClass)) {
+            closePopup(popup);
+        }
 
-/**
- * Закрытие попапа по клику на оверлей
- */ 
-document.addEventListener('click', function(e) {
-    if (e.target.classList.contains(selectors.popupClass)) {
-        closePopup(e.target);
-    }
+        if (e.target.classList.contains(selectors.closeBtnClass)) {
+            closePopup(popup);
+        }
+    })
 });
 
 export {popupClass, openPopup, closePopup};

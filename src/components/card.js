@@ -58,9 +58,10 @@ const popupImageTitle = showPicturePopup.querySelector('.popup__image-title');
  */
 const createCardBlock = (title, link) => {
     const cardItem = cardTemplate.cloneNode(true);
+    const imageElement = cardItem.querySelector(selectors.imageSelector);
     
-    cardItem.querySelector(selectors.imageSelector).src = link;
-    cardItem.querySelector(selectors.imageSelector).alt = title;
+    imageElement.src = link;
+    imageElement.alt = title;
     cardItem.querySelector(selectors.titleSelector).textContent = title;
 
     cardItem.querySelector(selectors.deleteBtnSelector).addEventListener('click', function(e) {
@@ -69,7 +70,7 @@ const createCardBlock = (title, link) => {
     cardItem.querySelector(selectors.likeBtnSelector).addEventListener('click', function(e) {
         e.target.classList.toggle(selectors.likeBtnActiveClass);
     });
-    cardItem.querySelector(selectors.imageSelector).addEventListener('click', function(e) {
+    imageElement.addEventListener('click', function(e) {
         openPicture(e);
     });
 
