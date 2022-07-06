@@ -3,11 +3,14 @@ import './styles/index.css';
 import {enableFromValidation, showSaveButtonState} from "./components/validate.js";
 import * as Card from "./components/card.js";
 import * as Popup from "./components/modal.js";
+import * as User from "./components/user.js";
 
 
 // Контейнер для карточек с изображениями
 const cards = document.querySelector('.cards');
 Card.init(cards);
+
+User.init();
 
 // Селекторы содержимого попапов
 const popupFormSelectors = {
@@ -50,10 +53,13 @@ const pictureLinkInput = pictureForm.querySelector(`${popupFormSelectors.inputSe
 // Функция "сохранения" информации о пользователе
 const saveProfileInfo = (e) => {
     e.preventDefault();
+    const userData = {
+        name: userNameInput.value,
+        about: userInfoInput.value
+    }
 
-    userName.innerText = userNameInput.value;
-    userInfo.innerText = userInfoInput.value;
-
+    User.saveUser(userData);
+    
     Popup.closePopup(editProfilePopup);
 }
 
@@ -70,7 +76,6 @@ const saveUserAvatar = (e) => {
 const addPicture = (e) => {
     e.preventDefault();
 
-    // const popup = e.target.closest(`.${Popup.popupClass}`);
     Card.addCard(cards, {title: pictureTitleInput.value, link: pictureLinkInput.value});
     
     Popup.closePopup(addPicturePopup);
