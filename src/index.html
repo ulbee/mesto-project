@@ -13,7 +13,9 @@
     <main class="main">
         <section class="top page__section page__section_top">
             <div class="profile">
-                <img src="<%=require('./images/avatar.jpg')%>" class="profile__avatar" alt="Аватар пользователя">
+                <button class="profile__avatar-edit-button">
+                    <img src="" class="profile__avatar" alt="Аватар пользователя">
+                </button>
                 <div class="profile__info">
                     <h1 class="profile__title"></h1>
                     <button type="button" class="profile__edit-button"></button>
@@ -75,14 +77,17 @@
         </div>
     </div>
     <template id="card">
-        <div class="card">
-            <button type="button" class="card__delete"></button>
+        <div class="card" id="">
             <img class="card__image" src="" alt="">
             <div class="card__info">
                 <h2 class="card__title"></h2>
                 <button type="button" class="card__like"></button>
+                <div class="card__likes-number"></div>
             </div>
         </div>   
+    </template>
+    <template id="card-delete-button">
+        <button type="button" class="card__delete"></button>
     </template>
 </body>
 </html>

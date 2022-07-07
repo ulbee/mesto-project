@@ -1,10 +1,12 @@
 import * as Popup from "./modal.js";
-import {getInitialCards} from "./api.js";
+import {saveCard, deleteCard, setLike, deleteLike, toggleLike} from "./api.js";
+import {getUserId} from "./user.js";
 
 /**
  * Шаблон для добавления карточек
  */
 const cardTemplate = document.querySelector('#card').content;
+const deleteBtnTemplate = document.querySelector('#card-delete-button').content;
 
 /**
  * Объект с селекторами для взаимодействия с элементами шаблона карточки
@@ -15,7 +17,8 @@ const selectors = {
     titleSelector: '.card__title',
     deleteBtnSelector: '.card__delete',
     likeBtnSelector: '.card__like',
-    likeBtnActiveClass: 'card__like_active'
+    likeBtnActiveClass: 'card__like_active',
+    likesNumberSelector: '.card__likes-number'
 }
 
 /**
@@ -28,26 +31,39 @@ const popupImageTitle = showPicturePopup.querySelector('.popup__image-title');
 /**
  * Функция создания html-разметки блока карточки
  * 
- * @param {string} title - название карточки
- * @param {string} link - url изображения добавляемого места
- * 
- * @todo cardTemplate
- * @todo openPicture
+ * @param {object} card - информация о карточке
+ * @param {string} card.name - название изображения добавляемого места
+ * @param {string} card.link - url изображения добавляемого места
+ * @param {array} card.likes[] - список пользователей, лайкнувших карточку
+ * @param {object} card.owner - объект пользователя, добавившего карточку
+ * @param {object} card.owner._id - id пользователя, добавившего карточку
  */
-const createCardBlock = (title, link) => {
+const createCardBlock = (card) => {
     const cardItem = cardTemplate.cloneNode(true);
-    const imageElement = cardItem.querySelector(selectors.imageSelector);
-    
-    imageElement.src = link;
-    imageElement.alt = title;
-    cardItem.querySelector(selectors.titleSelector).textContent = title;
+    const cardElement = cardItem.querySelector(selectors.cardContainerSelector);
+    const imageElement = cardElement.querySelector(selectors.imageSelector);
+    const titleElement = cardElement.querySelector(selectors.titleSelector);
+    const likeElement = cardElement.querySelector(selectors.likeBtnSelector);
+    const likeNumberElement = cardElement.querySelector(selectors.likesNumberSelector);
 
-    cardItem.querySelector(selectors.deleteBtnSelector).addEventListener('click', function(e) {
-        e.target.closest(selectors.cardContainerSelector).remove();
-    });
-    cardItem.querySelector(selectors.likeBtnSelector).addEventListener('click', function(e) {
-        e.target.classList.toggle(selectors.likeBtnActiveClass);
-    });
+    const userId = getUserId();
+    
+    cardElement.id = card._id;
+    imageElement.src = card.link;
+    imageElement.alt = card.name;
+    titleElement.textContent = card.name;
+    likeNumberElement.textContent = card.likes.length;
+
+    if (card.owner._id === userId) {
+        addDeleteButton(cardElement);
+    }
+
+    if (card.likes.find((el) => el._id === userId)) {
+        likeElement.classList.add(selectors.likeBtnActiveClass);
+    }
+
+    addLikeHandler(likeElement);
+
     imageElement.addEventListener('click', function(e) {
         openPicture(e);
     });
@@ -56,21 +72,62 @@ const createCardBlock = (title, link) => {
 };
 
 /**
+ * Добавление разметки кнопки удаления карточки и слушателя по клику на неё
+ */
+const addDeleteButton = (cardElement) => {
+    const deleteBtn = deleteBtnTemplate.cloneNode(true);
+
+    cardElement.prepend(deleteBtn);
+
+    cardElement.querySelector(selectors.deleteBtnSelector).addEventListener('click', function(e) {
+        const cardItem = e.target.closest(selectors.cardContainerSelector);
+
+        deleteCard(cardItem.id)
+        .then(() => {
+            cardItem.remove();
+        })
+        .catch((error) => {
+            console.log(error);
+        });
+        
+    });
+}
+
+/**
+ * Добавление хендлера для кнопки лайка
+ */
+const addLikeHandler = (likeElement) => {
+    likeElement.addEventListener('click', function(e) {
+        const cardItem = e.target.closest(selectors.cardContainerSelector);        
+        const likesNumberElement = cardItem.querySelector(selectors.likesNumberSelector);
+        const action = e.target.classList.contains(selectors.likeBtnActiveClass) ? 'delete' : 'save';
+
+        toggleLike(cardItem.id, action)
+            .then((res) => {
+                if (action === 'delete') {
+                    e.target.classList.remove(selectors.likeBtnActiveClass);
+                } else {
+                    e.target.classList.add(selectors.likeBtnActiveClass);
+                }
+                likesNumberElement.textContent = res.likes.length;
+            })
+            .catch((error) => {
+                console.log(error);
+            });        
+        
+    });
+}
+
+/**
  * Функция инициализации картинок на странице
  * 
  * @param {HTMLElement} cardsContainer - контейнер для добавления карточек
  */
-const init = (cardsContainer) => {
-    getInitialCards()
-    .then((cards) => {
-        cards.forEach(item => {
-            const card = createCardBlock(item.name, item.link);
-        
-            cardsContainer.append(card);    
-        });
-    })
-    .catch((error) => {
-        console.log(error);
+const init = (cardsContainer, cards) => {
+    cards.forEach(item => {
+        const card = createCardBlock(item);
+    
+        cardsContainer.append(card);    
     });
 }
 
@@ -79,20 +136,23 @@ const init = (cardsContainer) => {
  * 
  * @param {HTMLElement} cardsContainer - контейнер для добавления карточки
  * @param {object} cardsData - объект, содержащий link для картинки и title для карточки
- * @param {string} cardsData.title - название карточки
+ * @param {string} cardsData.name - название карточки
  * @param {string} cardsData.link - url изображения
  */
-const addCard = (cardsContainer, cardsData) => {
-    const card = createCardBlock(cardsData.title, cardsData.link);
+const addCard = (cardsContainer, card) => {
+    saveCard(card)
+    .then((card) => {
+        const cardMurkup = createCardBlock(card);
 
-    cardsContainer.prepend(card);
+        cardsContainer.prepend(cardMurkup);
+    })
+    .catch((error) => {
+        console.log(error);
+    });    
 }
 
 /**
  * Функция открытия картинки большего размера
- * 
- * Я решила, что эта функция должна относиться к модулю карточки: то есть карточка должна уметь 
- * добавляться, удаляться, лайкаться и также открывать попап с увеличенным изображением.
  */
 const openPicture = (el) => {
     const src = el.target.src;

@@ -1,4 +1,5 @@
-import {getUser, saveUserInfo} from "./api.js";
+import {saveUserAvatar, saveUserInfo} from "./api.js";
+import * as Popup from "./modal.js";
 
 const profile = document.querySelector('.profile');
 const userAvatar = profile.querySelector('.profile__avatar');
@@ -7,14 +8,21 @@ const userName = profile.querySelector('.profile__title');
 const userInfo = profile.querySelector('.profile__subtitle');
 const addPictureBtn = profile.querySelector('.profile__add-button');
 
-const init = () => {
-    getUser()
-    .then((user)=> {
-        userName.textContent = user.name;
-        userInfo.textContent = user.about;
-        userAvatar.src = user.avatar;
-    })
-    .catch(err => console.log(err));
+
+
+
+let userId;
+
+const init = (user) => {
+    userName.textContent = user.name;
+    userInfo.textContent = user.about;
+    userAvatar.src = user.avatar;
+
+    userId = user._id;
+}
+
+const getUserId = () => {
+    return userId;
 }
 
 const saveUser = (userData) => {
@@ -26,4 +34,4 @@ const saveUser = (userData) => {
     .catch(err => console.log(err));
 }
 
-export {init, saveUser};
+export {init, saveUser, getUserId};
