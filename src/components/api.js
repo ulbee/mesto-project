@@ -6,6 +6,9 @@ const config = {
     }
   }
 
+/**
+ * Получение данных о пользователе
+ */
 export const getUser = () => {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
@@ -61,6 +64,9 @@ export const saveUserInfo = (userData) => {
     });
 };
 
+/**
+ * Получение добавленных карточек
+ */
 export const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
       headers: config.headers
@@ -74,6 +80,13 @@ export const getInitialCards = () => {
     });
 };
 
+/**
+ * Сохранение новой карточки
+ * 
+ * @param {object} card
+ * @param {string} card.name - название карточки
+ * @param {string} card.link - url нового изображения
+ */
 export const saveCard = (card) => {
     return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
@@ -89,6 +102,11 @@ export const saveCard = (card) => {
     });
 };
 
+/**
+ * Удаление карточки. Удалять можно только свои карточки
+ * 
+ * @param {string} cardId - id карточки
+ */
 export const deleteCard = (cardId) => {
     return fetch(`${config.baseUrl}/cards/${cardId}`, {
         method: 'DELETE',
@@ -103,6 +121,12 @@ export const deleteCard = (cardId) => {
     });
 };
 
+/**
+ * Удаление карточки. Удалять можно только свои карточки
+ * 
+ * @param {string} cardId - id карточки
+ * @param {string} action - тип действия. Удаляет лайк при 'delete' и ставит в других случаях
+ */
 export const toggleLike = (cardId, action) => {
     const method = action === 'delete' ? 'DELETE' : 'PUT';
     

@@ -140,7 +140,7 @@ const init = (cardsContainer, cards) => {
  * @param {string} cardsData.link - url изображения
  */
 const addCard = (cardsContainer, card) => {
-    saveCard(card)
+    return saveCard(card)
     .then((card) => {
         const cardMurkup = createCardBlock(card);
 

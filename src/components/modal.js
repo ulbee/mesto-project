@@ -44,6 +44,24 @@ const openPopup = (popup) => {
 };
 
 /**
+ * Установка лоадера на кнопке отправки формы
+ */
+const setLoader = (popup) => {
+    popup.querySelector(popupFormSelectors.submitButtonSelector).textContent = 'Сохранение...';
+}
+
+/**
+ * Снятие лоадера на кнопке отправки формы. Предполагается, что в value кнопки содержится нужный
+ * текст для кнопки
+ */
+const removeLoader = (popup) => {
+    const btn = popup.querySelector(popupFormSelectors.submitButtonSelector);
+    const btnText = btn.value || 'Сохранить';
+
+    btn.textContent = btnText;
+}
+
+/**
  * Обработчик нажатия на escape
  */
 const handleEscPress = (e) => {
@@ -82,4 +100,4 @@ popups.forEach((popup) => {
     })
 });
 
-export {popupClass, popupFormSelectors, openPopup, closePopup};
+export {popupClass, popupFormSelectors, openPopup, closePopup, setLoader, removeLoader};
