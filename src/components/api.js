@@ -6,6 +6,14 @@ const config = {
     }
   }
 
+const chekResponse = (res) => {
+    if (res.ok) {
+        return res.json();
+    }
+
+    return Promise.reject(`Ошибка: ${res.status}`);
+}
+
 /**
  * Получение данных о пользователе
  */
@@ -13,13 +21,7 @@ export const getUser = () => {
     return fetch(`${config.baseUrl}/users/me`, {
         headers: config.headers
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(chekResponse);
 };
 
 /**
@@ -35,13 +37,7 @@ export const saveUserInfo = (userData) => {
         headers: config.headers,
         body: JSON.stringify(userData)
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(chekResponse);
 };
 
 /**
@@ -55,13 +51,7 @@ export const saveUserInfo = (userData) => {
         headers: config.headers,
         body: JSON.stringify({avatar: url})
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(chekResponse);
 };
 
 /**
@@ -71,13 +61,7 @@ export const getInitialCards = () => {
     return fetch(`${config.baseUrl}/cards`, {
       headers: config.headers
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(chekResponse);
 };
 
 /**
@@ -93,13 +77,7 @@ export const saveCard = (card) => {
         headers: config.headers,
         body: JSON.stringify(card)
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(chekResponse);
 };
 
 /**
@@ -112,13 +90,7 @@ export const deleteCard = (cardId) => {
         method: 'DELETE',
         headers: config.headers
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    });
+    .then(chekResponse);
 };
 
 /**
@@ -134,11 +106,5 @@ export const toggleLike = (cardId, action) => {
         method: method,
         headers: config.headers
     })
-    .then((res) => {
-        if (res.ok) {
-            return res.json();
-        }
-
-        return Promise.reject(`Ошибка: ${res.status}`);
-    }); 
+    .then(chekResponse); 
 };

@@ -72,10 +72,12 @@ const saveProfileInfo = (e) => {
         userName.textContent = user.name;
         userInfo.textContent = user.about;
 
-        Popup.closePopup(editProfilePopup);
-        Popup.removeLoader(editProfilePopup);
+        Popup.closePopup(editProfilePopup);        
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(() => {
+        Popup.removeLoader(editProfilePopup);
+    });
 }
 
 // Функция обновления аватара пользователе
@@ -86,26 +88,31 @@ const saveAvatar = (e) => {
     saveUserAvatar(userAvatarInput.value)
     .then((res) => {
         userAvatar.src = res.avatar;
-        Popup.closePopup(editUserAvatarPopup);
-        Popup.removeLoader(editUserAvatarPopup);
+        Popup.closePopup(editUserAvatarPopup);        
         editUserAvatarForm.reset();
+        showSaveButtonState(e.target, Popup.popupFormSelectors);
     })
-    .catch(err => console.log(err));
+    .catch(err => console.log(err))
+    .finally(() => {
+        Popup.removeLoader(editUserAvatarPopup);
+    });
 }
 
 // Функция добавления нового изображения
 const addPicture = (e) => {
     e.preventDefault();
     Popup.setLoader(addPicturePopup);
-;
+
     Card.addCard(cards, {name: pictureTitleInput.value, link: pictureLinkInput.value})
         .then(() => {
             Popup.closePopup(addPicturePopup);
             e.target.reset();
-            Popup.removeLoader(addPicturePopup);
             showSaveButtonState(e.target, Popup.popupFormSelectors);
         })
-        .catch(err => console.log(err));;
+        .catch(err => console.log(err))
+        .finally(() => {
+            Popup.removeLoader(addPicturePopup);
+        });
 }
 
 // Открытие попапа редактирования информации о пользователе
