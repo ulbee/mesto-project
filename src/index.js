@@ -4,7 +4,7 @@ import {enableFromValidation, showSaveButtonState} from "./components/validate.j
 import * as Card from "./components/card.js";
 import * as Popup from "./components/modal.js";
 import * as User from "./components/user.js";
-import {getInitialCards, getUser, saveUserInfo, saveUserAvatar} from './components/api';
+import {api} from './components/api';
 
 // Контейнер для карточек
 const cards = document.querySelector('.cards');
@@ -23,7 +23,7 @@ const editUserAvatarPopup = document.querySelector('#editUserAvatar');
 const editUserAvatarForm = editUserAvatarPopup.querySelector(Popup.popupFormSelectors.formSelector);
 const userAvatarInput = editUserAvatarForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="url"]`);
 
-// Определяем элементы попапа редактирования информации о пользователе 
+// Определяем элементы попапа редактирования информации о пользователе
 const editProfilePopup = document.querySelector('#editUserInfo');
 const profileForm = editProfilePopup.querySelector(Popup.popupFormSelectors.formSelector);
 const userNameInput = profileForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="name"]`);
@@ -36,12 +36,12 @@ const pictureTitleInput = pictureForm.querySelector(`${Popup.popupFormSelectors.
 const pictureLinkInput = pictureForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="link"]`);
 
 /**
- * Инициализация данных о пользователе и добавленных карточек 
+ * Инициализация данных о пользователе и добавленных карточек
  * (с проверкой возможности удалить карточку данному пользователю)
  */
  const init = () => {
-    const userDataPromise = getUser();
-    const cardsDataPromise = getInitialCards();
+    const userDataPromise = api.getUser();
+    const cardsDataPromise = api.getInitialCards();
 
     Promise.all([userDataPromise, cardsDataPromise])
         .then((res) => {
@@ -61,18 +61,18 @@ enableFromValidation(Popup.popupFormSelectors);
 const saveProfileInfo = (e) => {
     e.preventDefault();
     Popup.setLoader(editProfilePopup);
-    
+
     const userData = {
         name: userNameInput.value,
         about: userInfoInput.value
     }
 
-    saveUserInfo(userData)
+    api.saveUserInfo(userData)
     .then((user)=> {
         userName.textContent = user.name;
         userInfo.textContent = user.about;
 
-        Popup.closePopup(editProfilePopup);        
+        Popup.closePopup(editProfilePopup);
     })
     .catch(err => console.log(err))
     .finally(() => {
@@ -85,10 +85,10 @@ const saveAvatar = (e) => {
     e.preventDefault();
     Popup.setLoader(editUserAvatarPopup);
 
-    saveUserAvatar(userAvatarInput.value)
+    api.saveUserAvatar(userAvatarInput.value)
     .then((res) => {
         userAvatar.src = res.avatar;
-        Popup.closePopup(editUserAvatarPopup);        
+        Popup.closePopup(editUserAvatarPopup);
         editUserAvatarForm.reset();
         showSaveButtonState(e.target, Popup.popupFormSelectors);
     })

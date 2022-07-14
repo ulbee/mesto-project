@@ -1,5 +1,5 @@
 import * as Popup from "./modal.js";
-import {saveCard, deleteCard, setLike, deleteLike, toggleLike} from "./api.js";
+import {api} from "./api.js";
 import {getUserId} from "./user.js";
 
 /**
@@ -82,7 +82,7 @@ const addDeleteButton = (cardElement) => {
     cardElement.querySelector(selectors.deleteBtnSelector).addEventListener('click', function(e) {
         const cardItem = e.target.closest(selectors.cardContainerSelector);
 
-        deleteCard(cardItem.id)
+        api.deleteCard(cardItem.id)
         .then(() => {
             cardItem.remove();
         })
@@ -100,11 +100,11 @@ const addLikeHandler = (likeElement) => {
     likeElement.addEventListener('click', function(e) {
         const cardItem = e.target.closest(selectors.cardContainerSelector);        
         const likesNumberElement = cardItem.querySelector(selectors.likesNumberSelector);
-        const action = e.target.classList.contains(selectors.likeBtnActiveClass) ? 'delete' : 'save';
+        const isLiked = e.target.classList.contains(selectors.likeBtnActiveClass);
 
-        toggleLike(cardItem.id, action)
+        api.toggleLike(cardItem.id, isLiked)
             .then((res) => {
-                if (action === 'delete') {
+                if (isLiked) {
                     e.target.classList.remove(selectors.likeBtnActiveClass);
                 } else {
                     e.target.classList.add(selectors.likeBtnActiveClass);
@@ -135,12 +135,12 @@ const init = (cardsContainer, cards) => {
  * Функция добавления новой карточки (добавляем всегда перед уже имеющимися карточками)
  * 
  * @param {HTMLElement} cardsContainer - контейнер для добавления карточки
- * @param {object} cardsData - объект, содержащий link для картинки и title для карточки
- * @param {string} cardsData.name - название карточки
- * @param {string} cardsData.link - url изображения
+ * @param {object} card - объект, содержащий link для картинки и title для карточки
+ * @param {string} card.name - название карточки
+ * @param {string} card.link - url изображения
  */
 const addCard = (cardsContainer, card) => {
-    return saveCard(card)
+    return api.saveCard(card)
     .then((card) => {
         const cardMurkup = createCardBlock(card);
 
