@@ -13,7 +13,7 @@ export class Card {
     }
 
     _getElement() {
-        const cardElement = document.querySelector('#card')
+        const cardElement = document.querySelector(this._selector)
           .content
           .querySelector('.card')
           .cloneNode(true);
