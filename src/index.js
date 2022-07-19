@@ -1,7 +1,7 @@
 import './styles/index.css';
 
 import {enableFromValidation, showSaveButtonState} from "./components/validate.js";
-import * as Card from "./components/card.js";
+import {Card} from "./components/card.js";
 import * as Popup from "./components/modal.js";
 import * as User from "./components/user.js";
 import {api} from './components/api';
@@ -45,8 +45,15 @@ const pictureLinkInput = pictureForm.querySelector(`${Popup.popupFormSelectors.i
 
     Promise.all([userDataPromise, cardsDataPromise])
         .then((res) => {
+            const userId = res[0]._id;
+
+            res[1].forEach((cardItem) => {
+                const card = new Card(cardItem, '#card');
+
+                cards.append(card.generate(userId));
+
+            });
             User.init(res[0]);
-            Card.init(cards, res[1]);
         })
         .catch((error) => {
             console.log('Ошибка: ' + error);
@@ -103,16 +110,19 @@ const addPicture = (e) => {
     e.preventDefault();
     Popup.setLoader(addPicturePopup);
 
-    Card.addCard(cards, {name: pictureTitleInput.value, link: pictureLinkInput.value})
-        .then(() => {
+    api.saveCard({name: pictureTitleInput.value, link: pictureLinkInput.value})
+        .then((res) => {
             Popup.closePopup(addPicturePopup);
-            e.target.reset();
-            showSaveButtonState(e.target, Popup.popupFormSelectors);
+
+            const newCard = new Card(res, '#card');
+
+            cards.prepend(newCard.generate(res.owner._id));
         })
         .catch(err => console.log(err))
         .finally(() => {
             Popup.removeLoader(addPicturePopup);
         });
+        
 }
 
 // Открытие попапа редактирования информации о пользователе
