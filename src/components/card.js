@@ -1,8 +1,7 @@
 import * as Popup from "./modal.js";
-import {api} from "./api.js";
 
 export class Card {
-    constructor(data, selector) {
+    constructor({data, deleteHandler, likeHandler}, selector) {
         this._id = data._id;
         this._image = data.link;
         this._title = data.name;
@@ -10,6 +9,8 @@ export class Card {
         this._imageOwner = data.owner._id;
         this._selector = selector;
         this._isLiked = false;
+        this._deleteHandler = deleteHandler;
+        this._likeHandler = likeHandler;
     }
 
     _getElement() {
@@ -23,31 +24,14 @@ export class Card {
 
     _setDeleteEventListener() {
       this._element.querySelector('.card__delete').addEventListener('click', (e) => {
+        this._deleteHandler();
 
-        api.deleteCard(this._id)
-          .then(() => {
-              this._element.remove();
-          })
-          .catch((error) => {
-              console.log(error);
-          });
-        
       });
     }
 
     _setLikeEventListener() {
       this._element.querySelector('.card__like').addEventListener('click', (e) => {
-        
-        api.toggleLike(this._id, this._isLiked)
-            .then((res) => {
-              this._isLiked = !this._isLiked;
-              this._element.querySelector('.card__like').classList.toggle('card__like_active');                
-              this._element.querySelector('.card__likes-number').textContent = res.likes.length;
-            })
-            .catch((error) => {
-                console.log(error);
-            });        
-        
+        this._likeHandler();
       });
     }
 
@@ -72,6 +56,9 @@ export class Card {
       }
 
       return this._element;
+    }
+    getId(){
+      return this._id;
     }
 }
 

@@ -1,7 +1,7 @@
-class Api {
+export class Api {
   constructor(options) {
-    this.baseURL = options.baseURL;
-    this.headers = {
+    this._baseURL = options.baseURL;
+    this._headers = {
       authorization: options.headers.authorization,
       'Content-Type': 'application/json'
     }
@@ -17,8 +17,8 @@ class Api {
    * Получение данных о пользователе
    */
   getUser(){
-    return fetch(`${this.baseURL}/users/me`, {
-      headers: this.headers
+    return fetch(`${this._baseURL}/users/me`, {
+      headers: this._headers
     })
       .then(this.chekResponse);
   };
@@ -31,9 +31,9 @@ class Api {
    * @param {string} userData.about - дополнительная информация о пользователе
    */
     saveUserInfo (userData) {
-    return fetch(`${this.baseURL}/users/me`, {
+    return fetch(`${this._baseURL}/users/me`, {
       method: 'PATCH',
-      headers: this.headers,
+      headers: this._headers,
       body: JSON.stringify(userData)
     })
       .then(this.chekResponse);
@@ -45,9 +45,9 @@ class Api {
    * @param {string} url - ссылка на аватарку пользователя
    */
   saveUserAvatar (url) {
-    return fetch(`${this.baseURL}/users/me/avatar`, {
+    return fetch(`${this._baseURL}/users/me/avatar`, {
       method: 'PATCH',
-      headers: this.headers,
+      headers: this._headers,
       body: JSON.stringify({avatar: url})
     })
       .then(this.chekResponse);
@@ -57,8 +57,8 @@ class Api {
    * Получение добавленных карточек
    */
   getInitialCards() {
-    return fetch(`${this.baseURL}/cards`, {
-      headers: this.headers
+    return fetch(`${this._baseURL}/cards`, {
+      headers: this._headers
     })
       .then(this.chekResponse);
   };
@@ -71,9 +71,9 @@ class Api {
    * @param {string} card.link - url нового изображения
    */
   saveCard = (card) => {
-    return fetch(`${config.baseUrl}/cards`, {
+    return fetch(`${this._baseURL}/cards`, {
       method: 'POST',
-      headers: config.headers,
+      headers: this._headers,
       body: JSON.stringify(card)
     })
       .then(this.chekResponse);
@@ -85,9 +85,9 @@ class Api {
    * @param {string} cardId - id карточки
    */
   deleteCard = (cardId) => {
-    return fetch(`${this.baseURL}/cards/${cardId}`, {
+    return fetch(`${this._baseURL}/cards/${cardId}`, {
       method: 'DELETE',
-      headers: this.headers
+      headers: this._headers
     })
       .then(this.chekResponse);
   };
@@ -99,31 +99,22 @@ class Api {
    * @param {boolean} isLiked - проверка состояния лайка
    */
   toggleLike (cardId, isLiked) {
-    return fetch(`${this.baseURL}/cards/likes/${cardId}`, {
+    return fetch(`${this._baseURL}/cards/likes/${cardId}`, {
       method: isLiked ? 'DELETE' : 'PUT',
-      headers: this.headers
+      headers: this._headers
     })
       .then(this.chekResponse);
   };
 }
 
 
-const config = {
-  baseUrl: 'https://nomoreparties.co/v1/plus-cohort-13',
-  headers: {
-    authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a',
-    'Content-Type': 'application/json'
-  }
-}
-
-const api = new Api({
-  baseURL: 'https://nomoreparties.co/v1/plus-cohort-13',
-  headers: {
-    authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a'
-  }
-});
-
-export {api}
+// const config = {
+//   baseUrl: 'https://nomoreparties.co/v1/plus-cohort-13',
+//   headers: {
+//     authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a',
+//     'Content-Type': 'application/json'
+//   }
+// }
 
 
 
