@@ -25,26 +25,25 @@ export class Popup {
     this._popup = document.querySelector(popupSelector);
   }
 
-  _handleEscUp = (evt) => {
-    if(evt.key === 'Escape'){
+  _handleEscPress = (event) => {
+    if(event.key === 'Escape'){
       this.close();
     }
   }
 
   open(){
     this._popup.classList.add('popup_opened');
-    document.addEventListener('keyup', this._handleEscUp)
+    document.addEventListener('keyup', this._handleEscPress)
   }
 
   close(){
     this._popup.classList.remove('popup_opened');
-    document.removeEventListener('keyup', this._handleEscUp)
+    document.removeEventListener('keyup', this._handleEscPress)
   }
 
   setEventListeners(){
-    console.log(this);
     this._popup.addEventListener('mousedown', (evt) => {
-      if(evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')){
+      if(evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')) {
         this.close();
       }
     })

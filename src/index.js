@@ -89,7 +89,7 @@ addCardPopup.setEventListeners();
                     });
                   }
                 },
-                  '#card');
+                '#card');
 
                 cards.append(card.generate(userId));
 
@@ -101,35 +101,32 @@ addCardPopup.setEventListeners();
         })
 }
 
-// const initCards = () => {
-//
-// }
-
 init();
 
 enableFromValidation(popupFormSelectors);
 
 // Функция сохранения информации о пользователе
 const saveProfileInfo = (e) => {
-    e.preventDefault();
-    userPopup.setLoader(editProfilePopup);
+  e.preventDefault();
+  
+  userPopup.setLoader(editProfilePopup);
 
-    const userData = {
-        name: userNameInput.value,
-        about: userInfoInput.value
-    }
+  const userData = {
+      name: userNameInput.value,
+      about: userInfoInput.value
+  }
 
-    api.saveUserInfo(userData)
-    .then((user)=> {
-        userName.textContent = user.name;
-        userInfo.textContent = user.about;
+  api.saveUserInfo(userData)
+  .then((user)=> {
+      userName.textContent = user.name;
+      userInfo.textContent = user.about;
 
-        userPopup.close();
-    })
-    .catch(err => console.log(err))
-    .finally(() => {
-        userPopup.removeLoader();
-    });
+      userPopup.close();
+  })
+  .catch(err => console.log(err))
+  .finally(() => {
+      userPopup.removeLoader();
+  });
 }
 
 // Функция обновления аватара пользователе
@@ -153,8 +150,7 @@ const saveAvatar = (e) => {
 // Функция добавления нового изображения
 const addPicture = (e) => {
     e.preventDefault();
-  addCardPopup.setLoader();
-    console.log(api);
+    addCardPopup.setLoader();
     api.saveCard({name: pictureTitleInput.value, link: pictureLinkInput.value})
         .then((res) => {
           console.log(res)
@@ -196,15 +192,15 @@ const addPicture = (e) => {
 
 // Открытие попапа редактирования информации о пользователе
 editProfileBtn.addEventListener('click', function() {
-    userNameInput.value = userName.innerText;
-    userInfoInput.value = userInfo.innerText;
+  userNameInput.value = userName.innerText;
+  userInfoInput.value = userInfo.innerText;
 
   userPopup.open();
 });
 
 // Открытие попапа обновления аватара пользователя
 userAvatarBtn.addEventListener('click', (e) => {
-    avatarPopup.open();
+  avatarPopup.open();
 });
 
 // Открытие попапа добавления нового изображения

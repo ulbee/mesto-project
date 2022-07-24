@@ -6,7 +6,8 @@ export class Api {
       'Content-Type': 'application/json'
     }
   }
-  chekResponse(res) {
+  
+  _checkResponse(res) {
     if (res.ok) {
       return res.json();
     }
@@ -16,11 +17,11 @@ export class Api {
   /**
    * Получение данных о пользователе
    */
-  getUser(){
+  getUser() {
     return fetch(`${this._baseURL}/users/me`, {
       headers: this._headers
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 
   /**
@@ -30,13 +31,13 @@ export class Api {
    * @param {string} userData.name - имя пользователя
    * @param {string} userData.about - дополнительная информация о пользователе
    */
-    saveUserInfo (userData) {
+    saveUserInfo(userData) {
     return fetch(`${this._baseURL}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify(userData)
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 
   /**
@@ -44,13 +45,13 @@ export class Api {
    *
    * @param {string} url - ссылка на аватарку пользователя
    */
-  saveUserAvatar (url) {
+  saveUserAvatar(url) {
     return fetch(`${this._baseURL}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
       body: JSON.stringify({avatar: url})
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 
   /**
@@ -60,7 +61,7 @@ export class Api {
     return fetch(`${this._baseURL}/cards`, {
       headers: this._headers
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 
   /**
@@ -70,13 +71,13 @@ export class Api {
    * @param {string} card.name - название карточки
    * @param {string} card.link - url нового изображения
    */
-  saveCard = (card) => {
+  saveCard(card) {
     return fetch(`${this._baseURL}/cards`, {
       method: 'POST',
       headers: this._headers,
       body: JSON.stringify(card)
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 
   /**
@@ -84,12 +85,12 @@ export class Api {
    *
    * @param {string} cardId - id карточки
    */
-  deleteCard = (cardId) => {
+  deleteCard(cardId) {
     return fetch(`${this._baseURL}/cards/${cardId}`, {
       method: 'DELETE',
       headers: this._headers
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 
   /**
@@ -98,12 +99,12 @@ export class Api {
    * @param {string} cardId - id карточки
    * @param {boolean} isLiked - проверка состояния лайка
    */
-  toggleLike (cardId, isLiked) {
+  toggleLike(cardId, isLiked) {
     return fetch(`${this._baseURL}/cards/likes/${cardId}`, {
       method: isLiked ? 'DELETE' : 'PUT',
       headers: this._headers
     })
-      .then(this.chekResponse);
+      .then(this._checkResponse);
   };
 }
 

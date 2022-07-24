@@ -1,5 +1,3 @@
-import * as Popup from "./modal.js";
-
 export class Card {
     constructor({data, deleteHandler, likeHandler}, selector) {
         this._id = data._id;
@@ -7,10 +5,10 @@ export class Card {
         this._title = data.name;
         this._likes = data.likes;
         this._imageOwner = data.owner._id;
-        this._selector = selector;
         this._isLiked = false;
         this._deleteHandler = deleteHandler;
         this._likeHandler = likeHandler;
+        this._selector = selector;
     }
 
     _getElement() {
@@ -25,7 +23,6 @@ export class Card {
     _setDeleteEventListener() {
       this._element.querySelector('.card__delete').addEventListener('click', (e) => {
         this._deleteHandler();
-
       });
     }
 
@@ -35,6 +32,7 @@ export class Card {
       });
     }
 
+    // TODO убрать использование userId
     generate(userId) {
       this._element = this._getElement();
 
@@ -57,8 +55,13 @@ export class Card {
 
       return this._element;
     }
-    getId(){
+
+    getId() {
       return this._id;
+    }
+
+    getIsLiked() {
+      return this._isLiked;
     }
 }
 
