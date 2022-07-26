@@ -6,6 +6,7 @@ import {Popup, popupFormSelectors} from "./components/modal.js";
 import {PopupWithForm} from './components/PopupWithForm.js';
 import * as User from "./components/user.js";
 import {Api} from './components/api.js';
+import { Section } from './components/section.js';
 
 // Контейнер для карточек
 const cards = document.querySelector('.cards');
@@ -59,48 +60,59 @@ avatarPopup.setEventListeners();
 const addCardPopup = new Popup('#addPicture');
 addCardPopup.setEventListeners();
 
+let userId = 0;
+
+//TODO подумать, что сделать с приватными полями
+const cardsContainer = new Section({
+  items: [],
+  renderer: (cardItem) => {
+    const card = new Card({
+      data: cardItem,
+      deleteHandler: () => {
+        api.deleteCard(card.getId())
+          .then(() => {
+            card._element.remove();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      likeHandler: () => {
+        api.toggleLike(card.getId(), card.getIsLiked())
+        .then((res) => {
+          card._isLiked = !card.getIsLiked();
+          card._element.querySelector('.card__like').classList.toggle('card__like_active');
+          card._element.querySelector('.card__likes-number').textContent = res.likes.length;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      }
+    },
+    '#card');
+
+    return card.generate(userId);
+  }
+},
+'.cards');
+
+
 /**
  * Инициализация данных о пользователе и добавленных карточек
  * (с проверкой возможности удалить карточку данному пользователю)
  */
-//перенести загрузку карточек в Cards
  const init = () => {
     const userDataPromise = api.getUser();
     const cardsDataPromise = api.getInitialCards();
 
     Promise.all([userDataPromise, cardsDataPromise])
         .then((res) => {
-            const userId = res[0]._id;
+            userId = res[0]._id;
 
-            res[1].forEach((cardItem) => {
-                const card = new Card({
-                  data: cardItem,
-                  deleteHandler: () => {
-                    api.deleteCard(card.getId())
-                      .then(() => {
-                        card._element.remove();
-                      })
-                      .catch((error) => {
-                        console.log(error);
-                      });
-                  },
-                  likeHandler: () => {
-                    api.toggleLike(card.getId(), card.getIsLiked())
-                    .then((res) => {
-                      card._isLiked = !card.getIsLiked();
-                      card._element.querySelector('.card__like').classList.toggle('card__like_active');
-                      card._element.querySelector('.card__likes-number').textContent = res.likes.length;
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                  }
-                },
-                '#card');
-
-                cards.append(card.generate(userId));
-
+            res[1].reverse().forEach((cardItem) => {
+              cardsContainer.addItem(cardItem);
             });
+            
             User.init(res[0]);
         })
         .catch((error) => {
@@ -160,35 +172,9 @@ const addPicture = (e) => {
     addCardPopup.setLoader();
     api.saveCard({name: pictureTitleInput.value, link: pictureLinkInput.value})
         .then((res) => {
-          console.log(res)
           addCardPopup.close();
 
-            const newCard = new Card({
-              data: res,
-                deleteHandler: () => {
-                  api.deleteCard(newCard.getId())
-                    .then(() => {
-                      newCard._element.remove();
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                },
-                likeHandler: () => {
-                  api.toggleLike(newCard.getId(), newCard.getIsLiked())
-                    .then((res) => {
-                      newCard._isLiked = !newCard.getIsLiked();
-                      newCard._element.querySelector('.card__like').classList.toggle('card__like_active');
-                      newCard._element.querySelector('.card__likes-number').textContent = res.likes.length;
-                    })
-                    .catch((error) => {
-                      console.log(error);
-                    });
-                }
-              },
-              '#card');
-
-            cards.prepend(newCard.generate(res.owner._id));
+          cardsContainer.addItem(res);
         })
         .catch(err => console.log(err))
         .finally(() => {
