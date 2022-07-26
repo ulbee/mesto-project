@@ -1,6 +1,6 @@
 import './styles/index.css';
 
-import {enableFromValidation, showSaveButtonState} from "./components/validate.js";
+import {FormValidator} from "./components/validate.js";
 import {Card} from "./components/card.js";
 import {Popup, popupFormSelectors} from "./components/modal.js";
 import {PopupWithForm} from './components/PopupWithForm.js';
@@ -35,6 +35,12 @@ const addPicturePopup = document.querySelector('#addPicture');
 const pictureForm = addPicturePopup.querySelector(popupFormSelectors.formSelector);
 const pictureTitleInput = pictureForm.querySelector(`${popupFormSelectors.inputSelector}[name="title"]`);
 const pictureLinkInput = pictureForm.querySelector(`${popupFormSelectors.inputSelector}[name="link"]`);
+
+const avatarValidation = new FormValidator(popupFormSelectors, editUserAvatarForm); //или editUserAvatarPopup??
+const profileValidation = new FormValidator(popupFormSelectors, profileForm);
+const pictureValidation = new FormValidator(popupFormSelectors, pictureForm);
+
+
 
 const api = new Api({
   baseURL: 'https://nomoreparties.co/v1/plus-cohort-13',
@@ -103,7 +109,7 @@ addCardPopup.setEventListeners();
 
 init();
 
-enableFromValidation(popupFormSelectors);
+// FormValidator.enableFromValidation(popupFormSelectors);
 
 // Функция сохранения информации о пользователе
 const saveProfileInfo = (e) => {
@@ -139,7 +145,7 @@ const saveAvatar = (e) => {
         userAvatar.src = res.avatar;
         avatarPopup.close();
         editUserAvatarForm.reset();
-        showSaveButtonState(e.target, popupFormSelectors);
+      avatarValidation._showSaveButtonState(e.target, popupFormSelectors);
     })
     .catch(err => console.log(err))
     .finally(() => {
@@ -216,3 +222,7 @@ editUserAvatarForm.addEventListener('submit', saveAvatar);
 
 // Вешаем обработчик добавления изображения
 pictureForm.addEventListener('submit', addPicture);
+
+avatarValidation.enableFormValidation();
+profileValidation.enableFormValidation();
+pictureValidation.enableFormValidation();

@@ -1,5 +1,5 @@
 import {Popup, popupFormSelectors} from "./modal.js";
-import {enableFromValidation} from "./validate.js";
+import {FormValidator} from "./validate.js";
 
 export class PopupWithForm extends Popup {
   constructor(popupSelector, submitHandler) {
@@ -17,7 +17,7 @@ export class PopupWithForm extends Popup {
   setEventListeners() {
     super.setEventListeners();
     //проверить, валидна ли форма
-    enableFromValidation(popupFormSelectors);//поменять после переписывания валидации
+    FormValidator.enableFormValidation(popupFormSelectors);//поменять после переписывания валидации
 
     this._form.addEventListener('submit', (e) => {
       e.preventDefault();
