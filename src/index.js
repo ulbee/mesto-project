@@ -36,6 +36,7 @@ const pictureForm = addPicturePopup.querySelector(popupFormSelectors.formSelecto
 const pictureTitleInput = pictureForm.querySelector(`${popupFormSelectors.inputSelector}[name="title"]`);
 const pictureLinkInput = pictureForm.querySelector(`${popupFormSelectors.inputSelector}[name="link"]`);
 
+
 const avatarValidation = new FormValidator(popupFormSelectors, editUserAvatarForm); //или editUserAvatarPopup??
 const profileValidation = new FormValidator(popupFormSelectors, profileForm);
 const pictureValidation = new FormValidator(popupFormSelectors, pictureForm);
@@ -84,9 +85,9 @@ addCardPopup.setEventListeners();
                       });
                   },
                   likeHandler: () => {
-                    api.toggleLike(card.getId(), card._isLiked)
+                    api.toggleLike(card.getId(), card.getIsLiked())
                     .then((res) => {
-                      card._isLiked = !card._isLiked;
+                      card._isLiked = !card.getIsLiked();
                       card._element.querySelector('.card__like').classList.toggle('card__like_active');
                       card._element.querySelector('.card__likes-number').textContent = res.likes.length;
                     })
@@ -165,7 +166,7 @@ const addPicture = (e) => {
             const newCard = new Card({
               data: res,
                 deleteHandler: () => {
-                  api.deleteCard(newCard._id)
+                  api.deleteCard(newCard.getId())
                     .then(() => {
                       newCard._element.remove();
                     })
@@ -174,9 +175,9 @@ const addPicture = (e) => {
                     });
                 },
                 likeHandler: () => {
-                  api.toggleLike(newCard._id, newCard._isLiked)
+                  api.toggleLike(newCard.getId(), newCard.getIsLiked())
                     .then((res) => {
-                      newCard._isLiked = !newCard._isLiked;
+                      newCard._isLiked = !newCard.getIsLiked();
                       newCard._element.querySelector('.card__like').classList.toggle('card__like_active');
                       newCard._element.querySelector('.card__likes-number').textContent = res.likes.length;
                     })

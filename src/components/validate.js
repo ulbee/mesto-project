@@ -1,4 +1,4 @@
-//осталось понять, когда создаётся экземпляр класса, создаётся ли он вообще
+
 // проверить параметры функций, убрать ненужные, а, кажется, ненужные почти все, кроме тех, что в шоу/хайд.
 //чекнуть остальные заметки по коду итд.
 
@@ -36,10 +36,10 @@ export class FormValidator {
   };
 
   //смена состояния кнопки
-  _showSaveButtonState = (form, data) => {
+  _showSaveButtonState = () => {
     // const saveBtn = form.querySelector(data.submitButtonSelector);
 
-    if (this._hasInvalidValues(form, data)) {
+    if (this._hasInvalidValues()) {
       this._button.classList.add(this._data.inactiveButtonClass);
       this._button.setAttribute('disabled', true);
     } else {
@@ -49,10 +49,10 @@ export class FormValidator {
   }
 
   //включение валидации
-  enableFormValidation = (data) => {
+  enableFormValidation = () => {
     const formElements = Array.from(document.querySelectorAll(this._data.formSelector));
 
-    formElements.forEach((formElement) => {
+    formElements.forEach(() => {
       // const inputList = Array.from(this._form.querySelectorAll(this._data.inputSelector));
 
       this._showSaveButtonState(this._form, this._data);

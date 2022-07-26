@@ -77,10 +77,10 @@ export class Card {
 // const openPicture = (el) => {
 //     const src = el.target.src;
 //     const title = el.target.alt;
-
+//
 //     popupImage.src = src;
 //     popupImage.alt = title;
 //     popupImageTitle.textContent = title;
-
+//
 //     Popup.openPopup(showPicturePopup);
 // }
