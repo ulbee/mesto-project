@@ -1,4 +1,4 @@
-import {popupFormSelectors} from "./modal.js";
+import {popupFormSelectors} from "./popup.js";
 
 // Определяем редактируемые элементы профиля пользователя
 const profile = document.querySelector('.profile');

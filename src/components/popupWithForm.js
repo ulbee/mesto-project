@@ -1,4 +1,4 @@
-import {Popup, popupFormSelectors} from "./modal.js";
+import {Popup, popupFormSelectors} from "./popup.js";
 import {FormValidator} from "./validate.js";
 
 export class PopupWithForm extends Popup {
