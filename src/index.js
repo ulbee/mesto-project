@@ -2,7 +2,7 @@ import './styles/index.css';
 
 import { FormValidator } from "./components/validate.js";
 import { Card } from "./components/card.js";
-import { popupFormSelectors } from "./components/modal.js";
+import { popupFormSelectors } from "./components/popup.js";
 import { PopupWithForm } from './components/popupWithForm.js';
 import { Api } from './components/api.js';
 import { Section } from './components/section.js';
