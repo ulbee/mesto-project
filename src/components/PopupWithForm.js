@@ -16,8 +16,6 @@ export class PopupWithForm extends Popup {
 
   setEventListeners() {
     super.setEventListeners();
-    //проверить, валидна ли форма
-    FormValidator.enableFormValidation(popupFormSelectors);//поменять после переписывания валидации
 
     this._form.addEventListener('submit', (e) => {
       e.preventDefault();

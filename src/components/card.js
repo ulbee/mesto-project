@@ -65,11 +65,19 @@ export class Card {
       return this._element;
     }
 
+    updateLikeStatus(likeStatus) {
+      this._isLiked = likeStatus;
+    }
+
     getId() {
       return this._id;
     }
 
     getIsLiked() {
       return this._isLiked;
+    }
+
+    getCard() {
+      return this._element;
     }
 }
