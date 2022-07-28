@@ -7,6 +7,7 @@ import {PopupWithForm} from './components/PopupWithForm.js';
 import * as User from "./components/user.js";
 import {Api} from './components/api.js';
 import { Section } from './components/section.js';
+import {PopupWithImage} from "./components/PopupWithImage";
 
 // Контейнер для карточек
 const cards = document.querySelector('.cards');
@@ -43,6 +44,13 @@ const profileValidation = new FormValidator(popupFormSelectors, profileForm);
 const pictureValidation = new FormValidator(popupFormSelectors, pictureForm);
 
 
+/**
+ * Селекторы показа увеличенной картинки
+ */
+const showPicturePopup = document.querySelector('.popup_type_image');
+const popupImage = showPicturePopup.querySelector('.popup__image');
+const popupImageTitle = showPicturePopup.querySelector('.popup__image-title');
+
 
 const api = new Api({
   baseURL: 'https://nomoreparties.co/v1/plus-cohort-13',
@@ -59,6 +67,9 @@ avatarPopup.setEventListeners();
 
 const addCardPopup = new Popup('#addPicture');
 addCardPopup.setEventListeners();
+
+const popupZoomImage = new PopupWithImage('#showPicture');
+popupZoomImage.setEventListeners();
 
 let userId = 0;
 
@@ -87,10 +98,13 @@ const cardsContainer = new Section({
         .catch((error) => {
           console.log(error);
         });
+      },
+      imageHandler: () => {
+        popupZoomImage.open(cardItem.link, cardItem.name)
       }
     },
     '#card');
-
+    console.log(cardItem);
     return card.generate(userId);
   }
 },
@@ -213,3 +227,17 @@ pictureForm.addEventListener('submit', addPicture);
 avatarValidation.enableFormValidation();
 profileValidation.enableFormValidation();
 pictureValidation.enableFormValidation();
+
+// /**
+//  * Функция открытия картинки большего размера
+//  */
+// const openPicture = (el) => {
+//   const src = el.target.src;
+//   const title = el.target.alt;
+//
+//   popupImage.src = src;
+//   popupImage.alt = title;
+//   popupImageTitle.textContent = title;
+//
+//   Popup.openPopup(showPicturePopup);
+// }

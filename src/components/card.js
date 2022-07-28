@@ -1,5 +1,5 @@
 export class Card {
-    constructor({data, deleteHandler, likeHandler}, selector) {
+    constructor({data, deleteHandler, likeHandler, imageHandler}, selector) {
         this._id = data._id;
         this._image = data.link;
         this._title = data.name;
@@ -8,6 +8,7 @@ export class Card {
         this._isLiked = false;
         this._deleteHandler = deleteHandler;
         this._likeHandler = likeHandler;
+        this._imageHandler = imageHandler;
         this._selector = selector;
     }
 
@@ -32,6 +33,12 @@ export class Card {
       });
     }
 
+    _setImageEventListener() {
+      this._element.querySelector('.card__image').addEventListener('click', (e) => {
+        this._imageHandler();
+      })
+    }
+
     // TODO убрать использование userId
     generate(userId) {
       this._element = this._getElement();
@@ -53,6 +60,8 @@ export class Card {
         this._setDeleteEventListener();
       }
 
+      this._setImageEventListener();
+
       return this._element;
     }
 
@@ -64,23 +73,3 @@ export class Card {
       return this._isLiked;
     }
 }
-
-// /**
-//  * Селекторы показа увеличенной картинки
-//  */
-// const showPicturePopup = document.querySelector('#showPicture');
-// const popupImage = showPicturePopup.querySelector('.popup__image');
-// const popupImageTitle = showPicturePopup.querySelector('.popup__image-title');
-// /**
-//  * Функция открытия картинки большего размера
-//  */
-// const openPicture = (el) => {
-//     const src = el.target.src;
-//     const title = el.target.alt;
-//
-//     popupImage.src = src;
-//     popupImage.alt = title;
-//     popupImageTitle.textContent = title;
-//
-//     Popup.openPopup(showPicturePopup);
-// }
