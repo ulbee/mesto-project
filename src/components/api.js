@@ -32,6 +32,7 @@ export class Api {
    * @param {string} userData.about - дополнительная информация о пользователе
    */
     saveUserInfo(userData) {
+    console.log('userData',userData)
     return fetch(`${this._baseURL}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
@@ -43,13 +44,13 @@ export class Api {
   /**
    * Сохранение аватара пользователя
    *
-   * @param {string} url - ссылка на аватарку пользователя
+   * avatarData - ссылка на аватарку пользователя
    */
-  saveUserAvatar(url) {
+  saveUserAvatar(avatarData) {
     return fetch(`${this._baseURL}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify({avatar: url})
+      body: JSON.stringify(avatarData)
     })
       .then(this._checkResponse);
   };

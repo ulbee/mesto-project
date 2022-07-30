@@ -1,28 +1,9 @@
-/**
- * Селекторы попапа
- */
-const selectors = {
-  popupClass: 'popup',
-
-  closeBtnClass: 'popup__close',
-  openedPopupClass: 'popup_opened'
-}
-
-/**
- * Селекторы содержимого попапов
- */
-export const popupFormSelectors = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__save-button',
-  inactiveButtonClass: 'popup__save-button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_active'
-};
+import {popupFormSelectors} from './utils.js'
 
 export class Popup {
   constructor(popupSelector) {
     this._popup = document.querySelector(popupSelector);
+    this._submitButton = this._popup.querySelector(popupFormSelectors.submitButtonSelector);
   }
 
   _handleEscPress = (event) => {
@@ -50,13 +31,13 @@ export class Popup {
   }
 
   setLoader() {
-    this._popup.querySelector(popupFormSelectors.submitButtonSelector).textContent = 'Сохранение...';
+    this._submitButton.textContent = 'Сохранение...';
   }
 
   removeLoader() {
-    const btn = this._popup.querySelector(popupFormSelectors.submitButtonSelector);
-    const btnText = btn.value || 'Сохранить';
 
-    btn.textContent = btnText;
+    const btnText = this._submitButton.value || 'Сохранить';
+
+    this._submitButton.textContent = btnText;
   }
 }

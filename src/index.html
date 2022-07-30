@@ -37,7 +37,7 @@
             <button type="button" class="popup__close"></button>
             <h2 class="popup__title">Обновить аватар</h2>
             <form name="user-avatar" class="popup__form" novalidate>
-                <input id="avatar-input" class="popup__input" type="url" name="url" placeholder="URL аватара пользователя" value="" required>
+                <input id="avatar-input" class="popup__input" type="url" name="avatar" placeholder="URL аватара пользователя" value="" required>
                 <span class="popup__input-error avatar-input__error"></span>
                 <button class="popup__save-button" type="submit" value="Сохранить">Сохранить</button>
             </form>
@@ -50,7 +50,7 @@
             <form name="user-info" class="popup__form" novalidate>
                 <input id="name-input" class="popup__input" type="text" name="name" placeholder="Имя" value="" required minlength="2" maxlength="40">
                 <span class="popup__input-error name-input__error"></span>
-                <input id="info-input" class="popup__input" type="text" name="additional-info" placeholder="О себе" value="" required minlength="2" maxlength="200">
+                <input id="info-input" class="popup__input" type="text" name="about" placeholder="О себе" value="" required minlength="2" maxlength="200">
                 <span class="popup__input-error info-input__error"></span>
                 <button class="popup__save-button" type="submit" value="Сохранить">Сохранить</button>
             </form>
@@ -61,7 +61,7 @@
             <button type="button" class="popup__close"></button>
             <h2 class="popup__title">Новое место</h2>
             <form name="add-picture" class="popup__form" novalidate>
-                <input id="title-input" class="popup__input" type="text" name="title" placeholder="Название" value="" required minlength="2" maxlength="30">
+                <input id="title-input" class="popup__input" type="text" name="name" placeholder="Название" value="" required minlength="2" maxlength="30">
                 <span class="popup__input-error title-input__error"></span>
                 <input id="link-input" class="popup__input" type="url" name="link" placeholder="Ссылка на картинку" value="" required>
                 <span class="popup__input-error link-input__error"></span>

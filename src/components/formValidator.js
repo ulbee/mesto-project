@@ -31,7 +31,7 @@ export class FormValidator {
   };
 
   //смена состояния кнопки
-  _showSaveButtonState = () => {
+  showSaveButtonState = () => {
     if (this._hasInvalidValues()) {
       this._button.classList.add(this._data.inactiveButtonClass);
       this._button.setAttribute('disabled', true);
@@ -43,10 +43,7 @@ export class FormValidator {
 
   //включение валидации
   enableFormValidation = () => {
-    const formElements = Array.from(document.querySelectorAll(this._data.formSelector));
-
-    formElements.forEach(() => {
-      this._showSaveButtonState();
+      this.showSaveButtonState();
 
       this._inputArray.forEach((inputElement) => {
         inputElement.addEventListener('input', () => {
@@ -56,10 +53,8 @@ export class FormValidator {
             this._hideErrorMessage(inputElement);
           }
 
-          this._showSaveButtonState();
+          this.showSaveButtonState();
         });
       });
-    });
-
   }
 }

@@ -1,8 +1,7 @@
 import './styles/index.css';
 
-import { FormValidator } from "./components/validate.js";
+import { FormValidator } from "./components/formValidator.js";
 import { Card } from "./components/card.js";
-import { popupFormSelectors } from "./components/popup.js";
 import { PopupWithForm } from './components/popupWithForm.js';
 import { Api } from './components/api.js';
 import { Section } from './components/section.js';
@@ -10,33 +9,57 @@ import { PopupWithImage } from "./components/popupWithImage.js";
 import { UserInfo } from './components/userInfo.js';
 import {
   userAvatarBtn,
-  userAvatar,
   editProfileBtn,
   addPictureBtn,
   editUserAvatarForm,
-  userAvatarInput,
   editProfilePopup,
   profileForm,
   userNameInput,
   userInfoInput,
   pictureForm,
-  pictureTitleInput,
-  pictureLinkInput
+  popupFormSelectors
 } from './components/utils.js';
 
 const avatarValidation = new FormValidator(popupFormSelectors, editUserAvatarForm); //или editUserAvatarPopup??
 const profileValidation = new FormValidator(popupFormSelectors, profileForm);
 const pictureValidation = new FormValidator(popupFormSelectors, pictureForm);
 
+const api = new Api({
+  baseURL: 'https://nomoreparties.co/v1/plus-cohort-13',
+  headers: {
+    authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a'
+  }
+});
+
+const userPopup = new PopupWithForm('#editUserInfo', (userData) => {
+  saveProfileInfo(userData);
+});
+userPopup.setEventListeners();
+
+const avatarPopup = new PopupWithForm('#editUserAvatar', (avatarData) => {
+  saveAvatar(avatarData);
+});
+avatarPopup.setEventListeners();
+
+const addCardPopup = new PopupWithForm('#addPicture', (cardData) => {
+  addPicture(cardData);
+});
+addCardPopup.setEventListeners();
+
+const popupZoomImage = new PopupWithImage('#showPicture');
+popupZoomImage.setEventListeners();
+
+let userId = 0;
+
 // Функция сохранения информации о пользователе
-const saveProfileInfo = () => {
+const saveProfileInfo = (userData) => {
   userPopup.setLoader(editProfilePopup);
 
-  const userData = {
-      name: userNameInput.value,
-      about: userInfoInput.value
-  }
-
+  // const userData = {
+  //     name: userNameInput.value,
+  //     about: userInfoInput.value
+  // }
+  console.log('userData index',userData)
   api.saveUserInfo(userData)
     .then((res)=> {
       user.setUserInfo(res);
@@ -50,28 +73,26 @@ const saveProfileInfo = () => {
 }
 
 // Функция обновления аватара пользователе
-const saveAvatar = () => {
+const saveAvatar = (avatarData) => {
   avatarPopup.setLoader();
 
-  api.saveUserAvatar(userAvatarInput.value)
+  api.saveUserAvatar(avatarData)
     .then((res) => {
       user.setUserInfo(res);
 
-      userAvatar.src = res.avatar;
-
       avatarPopup.close();
-      avatarValidation._showSaveButtonState();
     })
     .catch(err => console.log(err))
     .finally(() => {
         avatarPopup.removeLoader();
+      avatarValidation.showSaveButtonState();
     });
 }
 
 // Функция добавления нового изображения
-const addPicture = () => {
+const addPicture = (cardData) => {
   addCardPopup.setLoader();
-  api.saveCard({name: pictureTitleInput.value, link: pictureLinkInput.value})
+  api.saveCard(cardData)
       .then((res) => {
         addCardPopup.close();
 
@@ -80,36 +101,12 @@ const addPicture = () => {
       .catch(err => console.log(err))
       .finally(() => {
         addCardPopup.removeLoader();
+        pictureValidation.showSaveButtonState();
       });
       
 }
 
-const api = new Api({
-  baseURL: 'https://nomoreparties.co/v1/plus-cohort-13',
-  headers: {
-    authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a'
-  }
-});
 
-const userPopup = new PopupWithForm('#editUserInfo', () => {
-  saveProfileInfo();
-});
-userPopup.setEventListeners();
-
-const avatarPopup = new PopupWithForm('#editUserAvatar', () => {
-  saveAvatar();
-});
-avatarPopup.setEventListeners();
-
-const addCardPopup = new PopupWithForm('#addPicture', () => {
-  addPicture();
-});
-addCardPopup.setEventListeners();
-
-const popupZoomImage = new PopupWithImage('#showPicture');
-popupZoomImage.setEventListeners();
-
-let userId = 0;
 
 const cardsContainer = new Section({
   items: [],
