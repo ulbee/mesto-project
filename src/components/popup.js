@@ -35,7 +35,6 @@ export class Popup {
   }
 
   removeLoader() {
-
     const btnText = this._submitButton.value || 'Сохранить';
 
     this._submitButton.textContent = btnText;

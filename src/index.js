@@ -20,7 +20,7 @@ import {
   popupFormSelectors
 } from './components/utils.js';
 
-const avatarValidation = new FormValidator(popupFormSelectors, editUserAvatarForm); //или editUserAvatarPopup??
+const avatarValidation = new FormValidator(popupFormSelectors, editUserAvatarForm);
 const profileValidation = new FormValidator(popupFormSelectors, profileForm);
 const pictureValidation = new FormValidator(popupFormSelectors, pictureForm);
 
@@ -55,11 +55,6 @@ let userId = 0;
 const saveProfileInfo = (userData) => {
   userPopup.setLoader(editProfilePopup);
 
-  // const userData = {
-  //     name: userNameInput.value,
-  //     about: userInfoInput.value
-  // }
-  console.log('userData index',userData)
   api.saveUserInfo(userData)
     .then((res)=> {
       user.setUserInfo(res);
@@ -105,8 +100,6 @@ const addPicture = (cardData) => {
       });
       
 }
-
-
 
 const cardsContainer = new Section({
   items: [],

@@ -39,7 +39,6 @@ export class Card {
       })
     }
 
-    // TODO убрать использование userId
     generate(userId) {
       this._element = this._getElement();
 

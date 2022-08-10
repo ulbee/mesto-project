@@ -31,8 +31,7 @@ export class Api {
    * @param {string} userData.name - имя пользователя
    * @param {string} userData.about - дополнительная информация о пользователе
    */
-    saveUserInfo(userData) {
-    console.log('userData',userData)
+  saveUserInfo(userData) {
     return fetch(`${this._baseURL}/users/me`, {
       method: 'PATCH',
       headers: this._headers,
@@ -44,13 +43,13 @@ export class Api {
   /**
    * Сохранение аватара пользователя
    *
-   * avatarData - ссылка на аватарку пользователя
+   * @param {string} url - ссылка на аватарку пользователя
    */
-  saveUserAvatar(avatarData) {
+  saveUserAvatar(url) {
     return fetch(`${this._baseURL}/users/me/avatar`, {
       method: 'PATCH',
       headers: this._headers,
-      body: JSON.stringify(avatarData)
+      body: JSON.stringify({avatar: url})
     })
       .then(this._checkResponse);
   };
@@ -108,18 +107,3 @@ export class Api {
       .then(this._checkResponse);
   };
 }
-
-
-// const config = {
-//   baseUrl: 'https://nomoreparties.co/v1/plus-cohort-13',
-//   headers: {
-//     authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a',
-//     'Content-Type': 'application/json'
-//   }
-// }
-
-
-
-
-
-

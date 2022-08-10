@@ -1,4 +1,3 @@
-
 export class FormValidator {
   constructor(data, form) {
     this._data = data;
@@ -48,7 +47,7 @@ export class FormValidator {
       this._inputArray.forEach((inputElement) => {
         inputElement.addEventListener('input', () => {
           if (!inputElement.validity.valid) {
-            this._showErrorMessage( inputElement);
+            this._showErrorMessage(inputElement);
           } else {
             this._hideErrorMessage(inputElement);
           }
