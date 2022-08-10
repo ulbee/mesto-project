@@ -1,52 +1,165 @@
 import './styles/index.css';
 
-import {enableFromValidation, showSaveButtonState} from "./components/validate.js";
-import * as Card from "./components/card.js";
-import * as Popup from "./components/modal.js";
-import * as User from "./components/user.js";
-import {getInitialCards, getUser, saveUserInfo, saveUserAvatar} from './components/api';
+import { FormValidator } from "./components/formValidator.js";
+import { Card } from "./components/card.js";
+import { PopupWithForm } from './components/popupWithForm.js';
+import { Api } from './components/api.js';
+import { Section } from './components/section.js';
+import { PopupWithImage } from "./components/popupWithImage.js";
+import { UserInfo } from './components/userInfo.js';
+import {
+  userAvatarBtn,
+  editProfileBtn,
+  addPictureBtn,
+  editUserAvatarForm,
+  editProfilePopup,
+  profileForm,
+  userNameInput,
+  userInfoInput,
+  pictureForm,
+  popupFormSelectors
+} from './components/utils.js';
 
-// Контейнер для карточек
-const cards = document.querySelector('.cards');
+const avatarValidation = new FormValidator(popupFormSelectors, editUserAvatarForm);
+const profileValidation = new FormValidator(popupFormSelectors, profileForm);
+const pictureValidation = new FormValidator(popupFormSelectors, pictureForm);
 
-// Определяем редактируемые элементы профиля пользователя
-const profile = document.querySelector('.profile');
-const userAvatarBtn = profile.querySelector('.profile__avatar-edit-button');
-const userAvatar = profile.querySelector('.profile__avatar');
-const editProfileBtn = profile.querySelector('.profile__edit-button');
-const userName = profile.querySelector('.profile__title');
-const userInfo = profile.querySelector('.profile__subtitle');
-const addPictureBtn = profile.querySelector('.profile__add-button');
+const api = new Api({
+  baseURL: 'https://nomoreparties.co/v1/plus-cohort-13',
+  headers: {
+    authorization: '36c8d5bf-5129-4f58-81ea-48641e8f9a0a'
+  }
+});
 
-// Попап обновления аватара пользователя
-const editUserAvatarPopup = document.querySelector('#editUserAvatar');
-const editUserAvatarForm = editUserAvatarPopup.querySelector(Popup.popupFormSelectors.formSelector);
-const userAvatarInput = editUserAvatarForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="url"]`);
+const userPopup = new PopupWithForm('#editUserInfo', (userData) => {
+  saveProfileInfo(userData);
+});
+userPopup.setEventListeners();
 
-// Определяем элементы попапа редактирования информации о пользователе 
-const editProfilePopup = document.querySelector('#editUserInfo');
-const profileForm = editProfilePopup.querySelector(Popup.popupFormSelectors.formSelector);
-const userNameInput = profileForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="name"]`);
-const userInfoInput = profileForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="additional-info"]`);
+const avatarPopup = new PopupWithForm('#editUserAvatar', (avatarData) => {
+  saveAvatar(avatarData);
+});
+avatarPopup.setEventListeners();
 
-// Определяем элементы попапа добавления нового изображения
-const addPicturePopup = document.querySelector('#addPicture');
-const pictureForm = addPicturePopup.querySelector(Popup.popupFormSelectors.formSelector);
-const pictureTitleInput = pictureForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="title"]`);
-const pictureLinkInput = pictureForm.querySelector(`${Popup.popupFormSelectors.inputSelector}[name="link"]`);
+const addCardPopup = new PopupWithForm('#addPicture', (cardData) => {
+  addPicture(cardData);
+});
+addCardPopup.setEventListeners();
+
+const popupZoomImage = new PopupWithImage('#showPicture');
+popupZoomImage.setEventListeners();
+
+let userId = 0;
+
+// Функция сохранения информации о пользователе
+const saveProfileInfo = (userData) => {
+  userPopup.setLoader(editProfilePopup);
+
+  api.saveUserInfo(userData)
+    .then((res)=> {
+      user.setUserInfo(res);
+
+      userPopup.close();
+    })
+    .catch(err => console.log(err))
+    .finally(() => {
+      userPopup.removeLoader();
+    });
+}
+
+// Функция обновления аватара пользователе
+const saveAvatar = (avatarData) => {
+  avatarPopup.setLoader();
+
+  api.saveUserAvatar(avatarData)
+    .then((res) => {
+      user.setUserInfo(res);
+
+      avatarPopup.close();
+    })
+    .catch(err => console.log(err))
+    .finally(() => {
+        avatarPopup.removeLoader();
+      avatarValidation.showSaveButtonState();
+    });
+}
+
+// Функция добавления нового изображения
+const addPicture = (cardData) => {
+  addCardPopup.setLoader();
+  api.saveCard(cardData)
+      .then((res) => {
+        addCardPopup.close();
+
+        cardsContainer.addItem(res);
+      })
+      .catch(err => console.log(err))
+      .finally(() => {
+        addCardPopup.removeLoader();
+        pictureValidation.showSaveButtonState();
+      });
+      
+}
+
+const cardsContainer = new Section({
+  items: [],
+  renderer: (cardItem) => {
+    const card = new Card({
+      data: cardItem,
+      deleteHandler: () => {
+        api.deleteCard(card.getId())
+          .then(() => {
+            card.getCard().remove();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      },
+      likeHandler: () => {
+        api.toggleLike(card.getId(), card.getIsLiked())
+        .then((res) => {
+          card.updateLikeStatus(!card.getIsLiked());
+          card.getCard().querySelector('.card__like').classList.toggle('card__like_active');
+          card.getCard().querySelector('.card__likes-number').textContent = res.likes.length;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      },
+      imageHandler: () => {
+        popupZoomImage.open(cardItem.link, cardItem.name)
+      }
+    },
+    '#card');
+
+    return card.generate(userId);
+  }
+},
+'.cards');
+
+const user = new UserInfo({
+  nameSelector: '.profile__title',
+  aboutSelector: '.profile__subtitle',
+  avatarSelector: '.profile__avatar'
+})
 
 /**
- * Инициализация данных о пользователе и добавленных карточек 
+ * Инициализация данных о пользователе и добавленных карточек
  * (с проверкой возможности удалить карточку данному пользователю)
  */
  const init = () => {
-    const userDataPromise = getUser();
-    const cardsDataPromise = getInitialCards();
+    const userDataPromise = api.getUser();
+    const cardsDataPromise = api.getInitialCards();
 
     Promise.all([userDataPromise, cardsDataPromise])
         .then((res) => {
-            User.init(res[0]);
-            Card.init(cards, res[1]);
+            user.setUserInfo(res[0]);
+            userId = res[0]._id;
+
+            res[1].reverse().forEach((cardItem) => {
+              cardsContainer.addItem(cardItem);
+            });
+            
         })
         .catch((error) => {
             console.log('Ошибка: ' + error);
@@ -55,89 +168,26 @@ const pictureLinkInput = pictureForm.querySelector(`${Popup.popupFormSelectors.i
 
 init();
 
-enableFromValidation(Popup.popupFormSelectors);
-
-// Функция сохранения информации о пользователе
-const saveProfileInfo = (e) => {
-    e.preventDefault();
-    Popup.setLoader(editProfilePopup);
-    
-    const userData = {
-        name: userNameInput.value,
-        about: userInfoInput.value
-    }
-
-    saveUserInfo(userData)
-    .then((user)=> {
-        userName.textContent = user.name;
-        userInfo.textContent = user.about;
-
-        Popup.closePopup(editProfilePopup);        
-    })
-    .catch(err => console.log(err))
-    .finally(() => {
-        Popup.removeLoader(editProfilePopup);
-    });
-}
-
-// Функция обновления аватара пользователе
-const saveAvatar = (e) => {
-    e.preventDefault();
-    Popup.setLoader(editUserAvatarPopup);
-
-    saveUserAvatar(userAvatarInput.value)
-    .then((res) => {
-        userAvatar.src = res.avatar;
-        Popup.closePopup(editUserAvatarPopup);        
-        editUserAvatarForm.reset();
-        showSaveButtonState(e.target, Popup.popupFormSelectors);
-    })
-    .catch(err => console.log(err))
-    .finally(() => {
-        Popup.removeLoader(editUserAvatarPopup);
-    });
-}
-
-// Функция добавления нового изображения
-const addPicture = (e) => {
-    e.preventDefault();
-    Popup.setLoader(addPicturePopup);
-
-    Card.addCard(cards, {name: pictureTitleInput.value, link: pictureLinkInput.value})
-        .then(() => {
-            Popup.closePopup(addPicturePopup);
-            e.target.reset();
-            showSaveButtonState(e.target, Popup.popupFormSelectors);
-        })
-        .catch(err => console.log(err))
-        .finally(() => {
-            Popup.removeLoader(addPicturePopup);
-        });
-}
-
 // Открытие попапа редактирования информации о пользователе
 editProfileBtn.addEventListener('click', function() {
-    userNameInput.value = userName.innerText;
-    userInfoInput.value = userInfo.innerText;
+  const userInfo = user.getUserInfo();
 
-    Popup.openPopup(editProfilePopup);
+  userNameInput.value = userInfo.name;
+  userInfoInput.value = userInfo.about;
+
+  userPopup.open();
 });
 
 // Открытие попапа обновления аватара пользователя
 userAvatarBtn.addEventListener('click', (e) => {
-    Popup.openPopup(editUserAvatarPopup);
+  avatarPopup.open();
 });
 
 // Открытие попапа добавления нового изображения
 addPictureBtn.addEventListener('click', () => {
-    Popup.openPopup(addPicturePopup);
+  addCardPopup.open();
 });
 
-// Добавление обработчика сохранения данных о пользователе
-profileForm.addEventListener('submit', saveProfileInfo);
-
-// Обработчик обновления аватара
-editUserAvatarForm.addEventListener('submit', saveAvatar);
-
-// Вешаем обработчик добавления изображения
-pictureForm.addEventListener('submit', addPicture);
+avatarValidation.enableFormValidation();
+profileValidation.enableFormValidation();
+pictureValidation.enableFormValidation();
